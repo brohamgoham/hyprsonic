@@ -30,7 +30,21 @@ Trades: | Asset SUI | Side Ask | ExecPrice0.9084 | Size 918.1 | TxHash 0x2e98219
 ### Parse L2 book and calculate imbalance ratio of bids/asks from incoming WS stream
 ```
 fn parse_l2book(book: L2Book) -> SuiSonic {}
-
+---
+L1: Ask Depth 125132.2 | Signal: Balanced | Total Bid ask 90723.7 | Imbalance RT 0.7250228158699359557332165502 |
+L1: Ask Depth 136718.7 | Signal: AskHeavy | Total Bid ask 55227.4 | Imbalance RT 0.4039491305871106147147390957 |
+L1: Ask Depth 136070.9 | Signal: AskHeavy | Total Bid ask 55888.5 | Imbalance RT 0.4107307293477150514915386023 |
+Trades: | Asset SUI | Side Bid | ExecPrice0.90982 | Size 12.8 | TxHash 0x0000000000000000000000000000000000000000000000000000000000000000
+L1: Ask Depth 118645.5 | Signal: AskHeavy | Total Bid ask 54215.1 | Imbalance RT 0.4569503268139120320618986814 |
+L1: Ask Depth 117974.1 | Signal: AskHeavy | Total Bid ask 54215.1 | Imbalance RT 0.4595508675209219650753851905 |
+L1: Ask Depth 119852.2 | Signal: AskHeavy | Total Bid ask 59163.1 | Imbalance RT 0.4936338256619402897902583348 |
+L1: Ask Depth 120401.4 | Signal: AskHeavy | Total Bid ask 59163.1 | Imbalance RT 0.4913821600081062180340095713 |
+L1: Ask Depth 111095.8 | Signal: AskHeavy | Total Bid ask 56964.9 | Imbalance RT 0.5127547576055980514114845026 |
+L1: Ask Depth 78145.0 | Signal: Balanced | Total Bid ask 59854.9 | Imbalance RT 0.7659466376607588457354917141 |
+L1: Ask Depth 81674.1 | Signal: Balanced | Total Bid ask 59663.3 | Imbalance RT 0.7305045295877150773623462028 |
+L1: Ask Depth 84020.6 | Signal: Balanced | Total Bid ask 59663.5 | Imbalance RT 0.7101056169558417816583076055 |
+L1: Ask Depth 83971.6 | Signal: Balanced | Total Bid ask 59114.0 | Imbalance RT 0.7039761062073367662400144811 |
+L1: Ask Depth 73381.0 | Signal: Balanced | Total Bid ask 67801.7 | Imbalance RT 0.923968057126504135947997438 |
 ```
 
 

@@ -2,7 +2,9 @@ mod types;
 
 use anyhow::Result;
 use futures::StreamExt;
-use hypersdk::{Decimal, hypercore::*};
+use hypersdk::hypercore::*;
+
+use crate::types::SuiSonic;
 
 pub struct HyprSonic {
     pub name: String,
@@ -21,9 +23,9 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     stream.subscribe(Subscription::Trades {
         coin: "SUI".to_string(),
     });
-    stream.subscribe(Subscription::Bbo {
-        coin: "SUI".to_string(),
-    });
+ //   stream.subscribe(Subscription::Bbo {
+ //       coin: "SUI".to_string(),
+ //   });
     stream.subscribe(Subscription::L2Book {
         coin: "SUI".to_string(),
     });
@@ -37,11 +39,14 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                     )
                 }
             }
-            Incoming::Bbo(b) => {
-                println!("BBO | Asset {} | BBO {:?}", b.coin, b.bbo)
-            }
+   //         Incoming::Bbo(b) => {
+   //             println!("BBO | Asset {} | BBO {:?}", b.coin, b.bbo)
+   //         }
             Incoming::L2Book(l) => {
-                println!("L2 Book | Asset {} | Levels {:?} ", l.coin, l.levels)
+                let mut sonic = SuiSonic::default();
+                let l2 = types::SuiSonic::parse_l2book(&mut sonic, l.clone());
+                println!("L1: Ask Depth {} | Signal: {:?} | Total Bid ask {} | Imbalance RT {} |", l2.ask_depth, l2.signal, l2.bid_depth, l2.imbalance_rt);
+               // println!("L2 Book | Asset {} | Levels {:?} ", l.coin, l.levels)
             }
             _ => {}
         };
