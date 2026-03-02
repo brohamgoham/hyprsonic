@@ -38,10 +38,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                 }
             }
             Incoming::Bbo(b) => {
-                println!("BBO | Asset {} | BBO {:#?}", b.coin, b.bbo)
+                println!("BBO | Asset {} | BBO {:?}", b.coin, b.bbo)
             }
             Incoming::L2Book(l) => {
-                println!("L2 Book | Asset {} | Levels {:#?} ", l.coin, l.levels)
+                println!("L2 Book | Asset {} | Levels {:?} ", l.coin, l.levels)
             }
             _ => {}
         };
