@@ -1,6 +1,6 @@
 # HyprSonic: fund the next move
 
-Product decision, 2026-09-14. The [full delivery plan](roadmap.md) defines implementation phases and acceptance gates. Only the [Phase 0 synthetic demo](phase0-report.md) is implemented today; live connections, monitoring, and the workflow below are not shipped capabilities. The agreed release sequence is to test with our own wallets and tune through repeated use before considering an external paid pilot.
+Product decision, 2026-09-14. The [full delivery plan](roadmap.md) defines implementation phases and acceptance gates. The [Phase 0 demo](phase0-report.md) and [Phase 1 read-only observations](phase1-report.md) are implemented; own-account acceptance, reconciliation, live funding plans and monitoring remain ahead. The agreed release sequence is to test with our own wallets and tune through repeated use before considering an external paid pilot.
 
 ## The product
 

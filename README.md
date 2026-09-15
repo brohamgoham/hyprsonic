@@ -8,6 +8,7 @@
 </p>
 
 <p align="center">
+  <a href="docs/observations.md">Observe accounts</a> ·
   <a href="#try-the-demo">Try the demo</a> ·
   <a href="docs/roadmap.md">Roadmap</a> ·
   <a href="docs/product.md">Product</a> ·
@@ -22,7 +23,24 @@ Money can be settled in one account, supporting margin in another, or waiting on
 
 **HyprSonic is being built to turn those constraints into a funding plan.** Connect Hyperliquid, Polymarket predictions, and a wallet. Specify where you need capital, by when, and which reserves to preserve. Compare the available routes and follow their dependencies through to destination credit.
 
-> **Development status:** the synthetic CLI demo is shipped. Live adapters, the funding workspace, and own-wallet trials are planned. The current executable uses no accounts, keys, network requests, or real funds.
+> **Development status:** real read-only account observations and the synthetic CLI demo are implemented. Public-reference live checks pass; the own-account acceptance check is pending configuration. Capital reconciliation, funding plans from live data, and the workspace are next. No signing or money movement is implemented.
+
+## Connect real accounts
+
+The `observe` command reads Hyperliquid, Polymarket positions, and EVM wallet balances through ports and adapters. It records account mode, exact amounts, source evidence and missing coverage. Every report keeps funding eligibility **undetermined** until reconciliation and venue rules are implemented.
+
+```sh
+umask 077
+mkdir -p .local
+cp -n config/accounts.example.json .local/accounts.json
+# Edit the copied config with your public account addresses.
+# Set the configured RPC environment variables for EVM wallet reads.
+cargo run --locked -- observe --config .local/accounts.json
+```
+
+**[Account setup, RPC configuration and coverage →](docs/observations.md)**
+
+The command writes private evidence under `.local/observations/`. A failed read exits `3` and reports the gap; it does not become a zero balance. Use `--json` for all observations. The [Phase 1 report](docs/phase1-report.md) separates live-reference evidence from the pending own-wallet check.
 
 ## One request. The whole funding path.
 
@@ -87,7 +105,7 @@ Our first release target is a workflow we use with **our own wallets** before of
 | Phase | Milestone | Status |
 |---|---|---|
 | **0** | Synthetic capital-plan proof and failure ledger | Shipped |
-| **1** | Real account connections and core boundaries | Next |
+| **1** | Real account connections and core boundaries | Implemented; own-account check pending |
 | **2** | Reconciled capital states and supported account rules | Planned |
 | **3** | One complete funding request with verified routes | Planned |
 | **4** | Continuous observation and a minimal workspace | Planned |
@@ -99,7 +117,7 @@ Each phase has deliverables, dependencies, failure checks, and an acceptance gat
 
 ## Built around a capital core
 
-The next implementation uses a pure Rust core behind ports and adapters. Account readers, market feeds, route quotes, receipts, and storage supply evidence to the same planning use cases.
+The workspace now has a pure Rust observation core and an application with account-reader, clock and evidence-store ports. Market feeds, route quotes, receipt tracking and planning will extend that boundary in subsequent phases.
 
 ```text
                     CLI / workspace
@@ -113,7 +131,7 @@ The next implementation uses a pure Rust core behind ports and adapters. Account
        Hyperliquid · Polymarket · wallets · routes
 ```
 
-This is the **planned architecture**. The shipped Phase 0 engine is still a standalone synthetic model. The next phase develops the core alongside real adapters; live observations will not be fed into arbitrary fixture rules.
+The diagram shows the full target workflow. **Observe and its core/adapter boundary are implemented**; Plan, Watch and the workspace UI remain planned. The Phase 0 engine stays a separate synthetic model, with no live observations fed into its arbitrary rules.
 
 Fast recomputation and fresh evidence are separate requirements. We'll measure upstream age, processing delay, decision updates, and display latency independently. [Read the architecture contract →](docs/architecture.md)
 
@@ -122,16 +140,17 @@ Fast recomputation and fresh evidence are separate requirements. We'll measure u
 From the repository root, after fetching dependencies:
 
 ```sh
-cargo test --offline --locked
-cargo clippy --offline --locked --all-targets -- -D warnings
+cargo test --workspace --offline --locked
+cargo clippy --workspace --offline --locked --all-targets -- -D warnings
 cargo fmt --all -- --check
 ```
 
-Phase 0 has **16 passing integration tests**, including double pledging, settlement delay, local margin failure despite positive aggregate equity, debt accounting, and non-atomic failures. Account support and release status will be documented as live phases ship.
+The suite includes the original 16 Phase 0 cases plus core, adapter and transport checks: exact decimals, pagination gaps, identity/mode errors, token validation, stale data, reorgs, evidence privacy and HTTP limits. Tests use deterministic inputs and local loopback servers; external network checks are opt-in through `observe`. See [current coverage](docs/observations.md#coverage).
 
 | Read next | Purpose |
 |---|---|
 | [Product decision](docs/product.md) | The user, recurring job, and commercial hypothesis |
+| [Observe real accounts](docs/observations.md) | Configuration, endpoint coverage, private evidence, and exit codes |
 | [Delivery plan](docs/roadmap.md) | Full phases and completion gates |
 | [Architecture](docs/architecture.md) | Domain model, ports, adapters, and evidence semantics |
 | [Own-wallet testing](docs/own-wallet-testing.md) | Internal trial sequence and decision journal |

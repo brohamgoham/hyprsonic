@@ -175,9 +175,12 @@ fn demo(f: &Fixture) -> Result<()> {
 
 fn run() -> Result<u8> {
     let args: Vec<String> = env::args().skip(1).collect();
+    if args.first().is_some_and(|s| s == "observe") {
+        return hyprsonic::observe::run(&args[1..]).map_err(anyhow::Error::msg);
+    }
     if args.is_empty() || args[0] == "--help" || args[0] == "help" {
         println!(
-            "hyprsonic demo [--fixture PATH]\nhyprsonic replay --scenario on-time|delayed --plan wallet|withdraw|reduce|finance [--fixture PATH] [--break-step] [--json]\nExit: 0 successful demo/feasible plan, 2 infeasible plan, 1 invalid input. Offline, synthetic only."
+            "hyprsonic observe [--config .local/accounts.json] [--json]\nObserve: read-only network access; exit 3 for incomplete reads.\n\nhyprsonic demo [--fixture PATH]\nhyprsonic replay --scenario on-time|delayed --plan wallet|withdraw|reduce|finance [--fixture PATH] [--break-step] [--json]\nExit: 0 successful demo/feasible plan, 2 infeasible plan, 1 invalid input. Demo/replay are offline and synthetic."
         );
         return Ok(0);
     }

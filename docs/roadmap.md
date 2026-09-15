@@ -2,7 +2,7 @@
 
 **Build it. Use it with our own wallets. Tune it before selling it.**
 
-This is the execution plan agreed on 2026-09-14. It expands the earlier architecture milestones and governs sequencing. The [product](product.md) and [architecture](architecture.md) documents define the scope and technical boundaries. Phase 0 is complete; all live-data phases below remain planned.
+This is the execution plan agreed on 2026-09-14. It expands the earlier architecture milestones and governs sequencing. The [product](product.md) and [architecture](architecture.md) documents define the scope and technical boundaries. Phase 0 is complete. Phase 1 readers/core are implemented and public-reference checks pass; its own-account acceptance gate remains pending. Later phases remain planned.
 
 ## Finish line
 
@@ -19,7 +19,7 @@ This plan authorizes software development and read-only observation of accounts 
 | Phase | Result you can use | Depends on | Status |
 |---|---|---|---|
 | 0 — Capital model demonstration | Replay the aggregate-equity/local-margin failure | — | **Shipped** |
-| 1 — Connect real accounts | Inspect actual responses, account identities and data coverage | 0 | Next |
+| 1 — Connect real accounts | Inspect actual responses, account identities and data coverage | 0 | Implemented; own-account acceptance pending |
 | 2 — Reconcile capital | Trust a scoped view of capital states and account constraints | 1 | Planned |
 | 3 — Plan one funding request | Compare supported ways to fund an existing HL account | 2 | Planned |
 | 4 — Follow the plan | Monitor decisions and confirmations in a minimal workspace | 3 | Planned |
@@ -36,6 +36,8 @@ Already shipped: synthetic three-venue portfolio, four funding alternatives, del
 Keep this regression evidence. Do not extend its arbitrary ticks, fees, rules and loan into a production model. Later tests can use captured responses and controlled faults; those are explicitly test inputs, not an expanded product demo.
 
 ## Phase 1 — connect real accounts and establish the core boundary
+
+Current evidence: [Phase 1 implementation report](phase1-report.md). Configure the owner's addresses using [the observation guide](observations.md) to finish the own-account gate. Public-reference connectivity does not waive that requirement.
 
 **Deliverable:** a CLI observation command reads configured accounts and shows exactly what it reached. This is the first implementation phase, not a standalone generic-engine project.
 

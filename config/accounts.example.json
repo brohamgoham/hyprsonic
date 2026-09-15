@@ -1,0 +1,17 @@
+{
+  "max_age_seconds": 120,
+  "accounts": [
+    { "kind": "hyperliquid", "alias": "hl", "address": "YOUR_ACTUAL_HL_ACCOUNT_ADDRESS" },
+    { "kind": "polymarket", "alias": "poly", "address": "YOUR_POLYMARKET_HOLDING_WALLET_ADDRESS" },
+    {
+      "kind": "evm", "alias": "polygon", "address": "YOUR_POLYMARKET_HOLDING_WALLET_ADDRESS",
+      "chain_id": 137, "rpc_url_env": "HYPRSONIC_POLYGON_RPC",
+      "tokens": [{ "contract": "0xC011a7E12a19f7B1f670d46F03B03f3342E82DFB", "symbol": "pUSD", "decimals": 6 }]
+    },
+    {
+      "kind": "evm", "alias": "arbitrum", "address": "YOUR_FUNDING_WALLET_ADDRESS",
+      "chain_id": 42161, "rpc_url_env": "HYPRSONIC_ARBITRUM_RPC",
+      "tokens": [{ "contract": "0xaf88d065e77c8cC2239327C5EDb3A432268e5831", "symbol": "USDC", "decimals": 6 }]
+    }
+  ]
+}

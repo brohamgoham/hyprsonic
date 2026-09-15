@@ -1,12 +1,12 @@
 # Capital core and real-data boundaries
 
-Design decision, 2026-09-14. This is the implementation contract for the next phases, not a description of code already shipped. The [delivery plan](roadmap.md) governs detailed sequencing and gates, including own-wallet testing and tuning before selling. The existing `src/engine.rs` is a deterministic synthetic demo coupled to its fixture. It must not be made "live" by substituting API values for its arbitrary rules.
+Design decision, 2026-09-14. This is the target implementation contract. Phase 1 now implements the observation core, account/clock/evidence ports and real readers; planning, reconciliation and monitoring sections below remain future work. The [delivery plan](roadmap.md) governs detailed sequencing and gates, including own-wallet testing and tuning before selling. The existing `src/engine.rs` remains a deterministic synthetic demo coupled to its fixture. It must not be made "live" by substituting API values for its arbitrary rules.
 
 ## One vertical slice
 
 The product request is `FundAccount`: destination account and asset, required amount, deadline, protected source balances, and selected stress assumptions. The application observes connected accounts, reconciles evidence, evaluates a supported set of routes, and keeps the resulting decision current. See [the product decision](product.md).
 
-Begin with one process and a Rust workspace containing `capital-core` and `hyprsonic` (application, CLI and adapters). That is a proposed layout, not scaffolding already committed. The core must compile and test without HTTP, WebSocket, chain SDKs, a database, wall-clock reads or venue credentials. Network concurrency lives in the application. Split adapter crates only when dependency or testing needs justify them.
+The implemented workspace contains `crates/capital-core` and the root `hyprsonic` package (application, CLI and adapters under `src/observe/`). The core compiles and tests without HTTP, WebSocket, chain SDKs, a database, wall-clock reads or venue credentials. Network concurrency lives in the application, with up to four account workers. Split adapter crates only when dependency or testing needs justify them. See [implemented coverage](observations.md#coverage) for the distinction between current readers and future ports/models.
 
 ```mermaid
 flowchart TB

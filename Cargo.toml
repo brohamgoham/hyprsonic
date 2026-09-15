@@ -4,7 +4,13 @@ version = "0.1.0"
 edition = "2024"
 rust-version = "1.88"
 
+[workspace]
+members = ["crates/capital-core"]
+resolver = "3"
+
 [dependencies]
 anyhow = "1.0.102"
 serde = { version = "1", features = ["derive"]}
-serde_json = "1"
+serde_json = { version = "1", features = ["arbitrary_precision"] }
+capital-core = { path = "crates/capital-core" }
+reqwest = { version = "0.13.4", default-features = false, features = ["blocking", "json", "query", "rustls"] }

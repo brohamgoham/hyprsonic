@@ -1,1 +1,7 @@
 /target
+/.local/
+.env
+.env.*
+!.env.example
+*.pem
+*.key
