@@ -1,0 +1,2234 @@
+{
+  "fixture_id": "lane1-phase0-v1",
+  "fixture": {
+    "id": "lane1-phase0-v1",
+    "synthetic": true,
+    "horizon": 6,
+    "action": {
+      "description": "Add one synthetic Hyperliquid position at tick 2",
+      "at": 2,
+      "initial_margin_cents": 550000,
+      "maintenance_cents": 400000
+    },
+    "capital": {
+      "wallet_withdrawable_cents": 160000,
+      "wallet_already_pledged_cents": 100000,
+      "hl_settled_cents": 400000,
+      "poly_withdrawable_cents": 250000,
+      "poly_pending_cents": 300000,
+      "kalshi_pending_cents": 500000
+    },
+    "rules": {
+      "hl_existing_maintenance_cents": 350000,
+      "poly_settlement_at": 3,
+      "poly_challenge_at": 1,
+      "poly_delayed_settlement_at": 9,
+      "kalshi_close_at": 1,
+      "kalshi_determination_at": 3,
+      "kalshi_settlement_at": 8,
+      "kalshi_commercial_access_met": false,
+      "transfer_ticks": 1,
+      "wallet_transfer_cents": 150000,
+      "wallet_fee_cents": 100,
+      "withdraw_transfer_cents": 220000,
+      "withdraw_fee_cents": 200,
+      "payout_sweep_fee_cents": 100,
+      "reduce_fee_cents": 3000,
+      "reduce_remaining_exposure_bps": 5000,
+      "reduce_margin_relief_cents": 100000
+    },
+    "price_move": {
+      "at": 5,
+      "existing_position_loss_cents": 200000,
+      "proposed_position_loss_cents": 100000
+    },
+    "quote": {
+      "id": "SYNTHETIC-QUOTE-001",
+      "synthetic": true,
+      "principal_cents": 320000,
+      "upfront_fee_cents": 2000,
+      "interest_bps_for_horizon": 50,
+      "max_ltv_bps": 8000,
+      "fund_at": 1,
+      "expires_at": 2,
+      "matures_at": 10,
+      "collateral_lots": [
+        "wallet-ready",
+        "poly-ready"
+      ]
+    }
+  },
+  "plan": "wallet",
+  "scenario": "delayed",
+  "injected_step_failure": false,
+  "feasible": false,
+  "failures": [
+    {
+      "tick": 5,
+      "code": "HL_MARGIN_UNMET",
+      "explanation": "Aggregate marked equity $14099.00 is positive; Hyperliquid has $2500.00 against local maintenance $4000.00; shortfall $1500.00. External pending/pledged capital is not margin in time"
+    }
+  ],
+  "ledger": [
+    {
+      "sequence": 1,
+      "tick": 0,
+      "code": "INITIAL_STATE",
+      "explanation": "SYNTHETIC USD CENTS; marked equity includes pending claims at fixture marks. It is not spendable cash. Kalshi commercial access: UNMET",
+      "state": {
+        "capital": [
+          {
+            "venue": "wallet",
+            "settled_cents": 260000,
+            "withdrawable_cents": 160000,
+            "unrealized_cents": 0,
+            "pending_proceeds_cents": 0,
+            "pledged_reserved_cents": 100000,
+            "delayed_blocked_cents": 0
+          },
+          {
+            "venue": "hyperliquid",
+            "settled_cents": 400000,
+            "withdrawable_cents": 0,
+            "unrealized_cents": 0,
+            "pending_proceeds_cents": 0,
+            "pledged_reserved_cents": 0,
+            "delayed_blocked_cents": 0
+          },
+          {
+            "venue": "polymarket",
+            "settled_cents": 250000,
+            "withdrawable_cents": 250000,
+            "unrealized_cents": 0,
+            "pending_proceeds_cents": 300000,
+            "pledged_reserved_cents": 0,
+            "delayed_blocked_cents": 0
+          },
+          {
+            "venue": "kalshi",
+            "settled_cents": 0,
+            "withdrawable_cents": 0,
+            "unrealized_cents": 0,
+            "pending_proceeds_cents": 500000,
+            "pledged_reserved_cents": 0,
+            "delayed_blocked_cents": 0
+          },
+          {
+            "venue": "in_transit",
+            "settled_cents": 0,
+            "withdrawable_cents": 0,
+            "unrealized_cents": 0,
+            "pending_proceeds_cents": 0,
+            "pledged_reserved_cents": 0,
+            "delayed_blocked_cents": 0
+          }
+        ],
+        "lots": [
+          {
+            "id": "wallet-ready",
+            "venue": "wallet",
+            "cents": 160000,
+            "state": {
+              "kind": "withdrawable"
+            }
+          },
+          {
+            "id": "wallet-pledged",
+            "venue": "wallet",
+            "cents": 100000,
+            "state": {
+              "kind": "pledged",
+              "detail": "existing-obligation-no-loan"
+            }
+          },
+          {
+            "id": "hl-margin",
+            "venue": "hyperliquid",
+            "cents": 400000,
+            "state": {
+              "kind": "settled_locked"
+            }
+          },
+          {
+            "id": "poly-ready",
+            "venue": "polymarket",
+            "cents": 250000,
+            "state": {
+              "kind": "withdrawable"
+            }
+          },
+          {
+            "id": "poly-payout",
+            "venue": "polymarket",
+            "cents": 300000,
+            "state": {
+              "kind": "pending_proceeds"
+            }
+          },
+          {
+            "id": "kalshi-payout",
+            "venue": "kalshi",
+            "cents": 500000,
+            "state": {
+              "kind": "pending_proceeds"
+            }
+          }
+        ],
+        "aggregate_equity_cents": 1710000,
+        "loan_liability_cents": 0,
+        "hl_local_equity_cents": 400000,
+        "hl_required_cents": 350000,
+        "total_cost_cents": 0,
+        "action_executed": false
+      }
+    },
+    {
+      "sequence": 2,
+      "tick": 0,
+      "code": "TRANSFER_RESERVED",
+      "explanation": "wallet-ready: reserve $1500.00, charge $1.00; source funds no longer withdrawable",
+      "state": {
+        "capital": [
+          {
+            "venue": "wallet",
+            "settled_cents": 259900,
+            "withdrawable_cents": 9900,
+            "unrealized_cents": 0,
+            "pending_proceeds_cents": 0,
+            "pledged_reserved_cents": 250000,
+            "delayed_blocked_cents": 0
+          },
+          {
+            "venue": "hyperliquid",
+            "settled_cents": 400000,
+            "withdrawable_cents": 0,
+            "unrealized_cents": 0,
+            "pending_proceeds_cents": 0,
+            "pledged_reserved_cents": 0,
+            "delayed_blocked_cents": 0
+          },
+          {
+            "venue": "polymarket",
+            "settled_cents": 250000,
+            "withdrawable_cents": 250000,
+            "unrealized_cents": 0,
+            "pending_proceeds_cents": 300000,
+            "pledged_reserved_cents": 0,
+            "delayed_blocked_cents": 0
+          },
+          {
+            "venue": "kalshi",
+            "settled_cents": 0,
+            "withdrawable_cents": 0,
+            "unrealized_cents": 0,
+            "pending_proceeds_cents": 500000,
+            "pledged_reserved_cents": 0,
+            "delayed_blocked_cents": 0
+          },
+          {
+            "venue": "in_transit",
+            "settled_cents": 0,
+            "withdrawable_cents": 0,
+            "unrealized_cents": 0,
+            "pending_proceeds_cents": 0,
+            "pledged_reserved_cents": 0,
+            "delayed_blocked_cents": 0
+          }
+        ],
+        "lots": [
+          {
+            "id": "wallet-ready",
+            "venue": "wallet",
+            "cents": 9900,
+            "state": {
+              "kind": "withdrawable"
+            }
+          },
+          {
+            "id": "wallet-pledged",
+            "venue": "wallet",
+            "cents": 100000,
+            "state": {
+              "kind": "pledged",
+              "detail": "existing-obligation-no-loan"
+            }
+          },
+          {
+            "id": "hl-margin",
+            "venue": "hyperliquid",
+            "cents": 400000,
+            "state": {
+              "kind": "settled_locked"
+            }
+          },
+          {
+            "id": "poly-ready",
+            "venue": "polymarket",
+            "cents": 250000,
+            "state": {
+              "kind": "withdrawable"
+            }
+          },
+          {
+            "id": "poly-payout",
+            "venue": "polymarket",
+            "cents": 300000,
+            "state": {
+              "kind": "pending_proceeds"
+            }
+          },
+          {
+            "id": "kalshi-payout",
+            "venue": "kalshi",
+            "cents": 500000,
+            "state": {
+              "kind": "pending_proceeds"
+            }
+          },
+          {
+            "id": "wallet-ready-transfer-0",
+            "venue": "wallet",
+            "cents": 150000,
+            "state": {
+              "kind": "reserved",
+              "detail": "wallet-ready-transfer-0"
+            }
+          }
+        ],
+        "aggregate_equity_cents": 1709900,
+        "loan_liability_cents": 0,
+        "hl_local_equity_cents": 400000,
+        "hl_required_cents": 350000,
+        "total_cost_cents": 100,
+        "action_executed": false
+      }
+    },
+    {
+      "sequence": 3,
+      "tick": 0,
+      "code": "TRANSFER_SENT",
+      "explanation": "wallet-ready-transfer-0: Hyperliquid receives funds only at t=1; no credit before arrival",
+      "state": {
+        "capital": [
+          {
+            "venue": "wallet",
+            "settled_cents": 109900,
+            "withdrawable_cents": 9900,
+            "unrealized_cents": 0,
+            "pending_proceeds_cents": 0,
+            "pledged_reserved_cents": 100000,
+            "delayed_blocked_cents": 0
+          },
+          {
+            "venue": "hyperliquid",
+            "settled_cents": 400000,
+            "withdrawable_cents": 0,
+            "unrealized_cents": 0,
+            "pending_proceeds_cents": 0,
+            "pledged_reserved_cents": 0,
+            "delayed_blocked_cents": 0
+          },
+          {
+            "venue": "polymarket",
+            "settled_cents": 250000,
+            "withdrawable_cents": 250000,
+            "unrealized_cents": 0,
+            "pending_proceeds_cents": 300000,
+            "pledged_reserved_cents": 0,
+            "delayed_blocked_cents": 0
+          },
+          {
+            "venue": "kalshi",
+            "settled_cents": 0,
+            "withdrawable_cents": 0,
+            "unrealized_cents": 0,
+            "pending_proceeds_cents": 500000,
+            "pledged_reserved_cents": 0,
+            "delayed_blocked_cents": 0
+          },
+          {
+            "venue": "in_transit",
+            "settled_cents": 0,
+            "withdrawable_cents": 0,
+            "unrealized_cents": 0,
+            "pending_proceeds_cents": 0,
+            "pledged_reserved_cents": 0,
+            "delayed_blocked_cents": 150000
+          }
+        ],
+        "lots": [
+          {
+            "id": "wallet-ready",
+            "venue": "wallet",
+            "cents": 9900,
+            "state": {
+              "kind": "withdrawable"
+            }
+          },
+          {
+            "id": "wallet-pledged",
+            "venue": "wallet",
+            "cents": 100000,
+            "state": {
+              "kind": "pledged",
+              "detail": "existing-obligation-no-loan"
+            }
+          },
+          {
+            "id": "hl-margin",
+            "venue": "hyperliquid",
+            "cents": 400000,
+            "state": {
+              "kind": "settled_locked"
+            }
+          },
+          {
+            "id": "poly-ready",
+            "venue": "polymarket",
+            "cents": 250000,
+            "state": {
+              "kind": "withdrawable"
+            }
+          },
+          {
+            "id": "poly-payout",
+            "venue": "polymarket",
+            "cents": 300000,
+            "state": {
+              "kind": "pending_proceeds"
+            }
+          },
+          {
+            "id": "kalshi-payout",
+            "venue": "kalshi",
+            "cents": 500000,
+            "state": {
+              "kind": "pending_proceeds"
+            }
+          },
+          {
+            "id": "wallet-ready-transfer-0",
+            "venue": "in_transit",
+            "cents": 150000,
+            "state": {
+              "kind": "in_transit"
+            }
+          }
+        ],
+        "aggregate_equity_cents": 1709900,
+        "loan_liability_cents": 0,
+        "hl_local_equity_cents": 400000,
+        "hl_required_cents": 350000,
+        "total_cost_cents": 100,
+        "action_executed": false
+      }
+    },
+    {
+      "sequence": 4,
+      "tick": 1,
+      "code": "TRANSFER_ARRIVED",
+      "explanation": "wallet-ready-transfer-0: $1500.00 now counts toward local Hyperliquid margin",
+      "state": {
+        "capital": [
+          {
+            "venue": "wallet",
+            "settled_cents": 109900,
+            "withdrawable_cents": 9900,
+            "unrealized_cents": 0,
+            "pending_proceeds_cents": 0,
+            "pledged_reserved_cents": 100000,
+            "delayed_blocked_cents": 0
+          },
+          {
+            "venue": "hyperliquid",
+            "settled_cents": 550000,
+            "withdrawable_cents": 0,
+            "unrealized_cents": 0,
+            "pending_proceeds_cents": 0,
+            "pledged_reserved_cents": 0,
+            "delayed_blocked_cents": 0
+          },
+          {
+            "venue": "polymarket",
+            "settled_cents": 250000,
+            "withdrawable_cents": 250000,
+            "unrealized_cents": 0,
+            "pending_proceeds_cents": 300000,
+            "pledged_reserved_cents": 0,
+            "delayed_blocked_cents": 0
+          },
+          {
+            "venue": "kalshi",
+            "settled_cents": 0,
+            "withdrawable_cents": 0,
+            "unrealized_cents": 0,
+            "pending_proceeds_cents": 500000,
+            "pledged_reserved_cents": 0,
+            "delayed_blocked_cents": 0
+          },
+          {
+            "venue": "in_transit",
+            "settled_cents": 0,
+            "withdrawable_cents": 0,
+            "unrealized_cents": 0,
+            "pending_proceeds_cents": 0,
+            "pledged_reserved_cents": 0,
+            "delayed_blocked_cents": 0
+          }
+        ],
+        "lots": [
+          {
+            "id": "wallet-ready",
+            "venue": "wallet",
+            "cents": 9900,
+            "state": {
+              "kind": "withdrawable"
+            }
+          },
+          {
+            "id": "wallet-pledged",
+            "venue": "wallet",
+            "cents": 100000,
+            "state": {
+              "kind": "pledged",
+              "detail": "existing-obligation-no-loan"
+            }
+          },
+          {
+            "id": "hl-margin",
+            "venue": "hyperliquid",
+            "cents": 400000,
+            "state": {
+              "kind": "settled_locked"
+            }
+          },
+          {
+            "id": "poly-ready",
+            "venue": "polymarket",
+            "cents": 250000,
+            "state": {
+              "kind": "withdrawable"
+            }
+          },
+          {
+            "id": "poly-payout",
+            "venue": "polymarket",
+            "cents": 300000,
+            "state": {
+              "kind": "pending_proceeds"
+            }
+          },
+          {
+            "id": "kalshi-payout",
+            "venue": "kalshi",
+            "cents": 500000,
+            "state": {
+              "kind": "pending_proceeds"
+            }
+          },
+          {
+            "id": "wallet-ready-transfer-0",
+            "venue": "hyperliquid",
+            "cents": 150000,
+            "state": {
+              "kind": "settled_locked"
+            }
+          }
+        ],
+        "aggregate_equity_cents": 1709900,
+        "loan_liability_cents": 0,
+        "hl_local_equity_cents": 550000,
+        "hl_required_cents": 350000,
+        "total_cost_cents": 100,
+        "action_executed": false
+      }
+    },
+    {
+      "sequence": 5,
+      "tick": 1,
+      "code": "KALSHI_CLOSED",
+      "explanation": "Market closed; determination and settlement are still separate future events. Contribution to Hyperliquid funding: $0.00",
+      "state": {
+        "capital": [
+          {
+            "venue": "wallet",
+            "settled_cents": 109900,
+            "withdrawable_cents": 9900,
+            "unrealized_cents": 0,
+            "pending_proceeds_cents": 0,
+            "pledged_reserved_cents": 100000,
+            "delayed_blocked_cents": 0
+          },
+          {
+            "venue": "hyperliquid",
+            "settled_cents": 550000,
+            "withdrawable_cents": 0,
+            "unrealized_cents": 0,
+            "pending_proceeds_cents": 0,
+            "pledged_reserved_cents": 0,
+            "delayed_blocked_cents": 0
+          },
+          {
+            "venue": "polymarket",
+            "settled_cents": 250000,
+            "withdrawable_cents": 250000,
+            "unrealized_cents": 0,
+            "pending_proceeds_cents": 300000,
+            "pledged_reserved_cents": 0,
+            "delayed_blocked_cents": 0
+          },
+          {
+            "venue": "kalshi",
+            "settled_cents": 0,
+            "withdrawable_cents": 0,
+            "unrealized_cents": 0,
+            "pending_proceeds_cents": 500000,
+            "pledged_reserved_cents": 0,
+            "delayed_blocked_cents": 0
+          },
+          {
+            "venue": "in_transit",
+            "settled_cents": 0,
+            "withdrawable_cents": 0,
+            "unrealized_cents": 0,
+            "pending_proceeds_cents": 0,
+            "pledged_reserved_cents": 0,
+            "delayed_blocked_cents": 0
+          }
+        ],
+        "lots": [
+          {
+            "id": "wallet-ready",
+            "venue": "wallet",
+            "cents": 9900,
+            "state": {
+              "kind": "withdrawable"
+            }
+          },
+          {
+            "id": "wallet-pledged",
+            "venue": "wallet",
+            "cents": 100000,
+            "state": {
+              "kind": "pledged",
+              "detail": "existing-obligation-no-loan"
+            }
+          },
+          {
+            "id": "hl-margin",
+            "venue": "hyperliquid",
+            "cents": 400000,
+            "state": {
+              "kind": "settled_locked"
+            }
+          },
+          {
+            "id": "poly-ready",
+            "venue": "polymarket",
+            "cents": 250000,
+            "state": {
+              "kind": "withdrawable"
+            }
+          },
+          {
+            "id": "poly-payout",
+            "venue": "polymarket",
+            "cents": 300000,
+            "state": {
+              "kind": "pending_proceeds"
+            }
+          },
+          {
+            "id": "kalshi-payout",
+            "venue": "kalshi",
+            "cents": 500000,
+            "state": {
+              "kind": "pending_proceeds"
+            }
+          },
+          {
+            "id": "wallet-ready-transfer-0",
+            "venue": "hyperliquid",
+            "cents": 150000,
+            "state": {
+              "kind": "settled_locked"
+            }
+          }
+        ],
+        "aggregate_equity_cents": 1709900,
+        "loan_liability_cents": 0,
+        "hl_local_equity_cents": 550000,
+        "hl_required_cents": 350000,
+        "total_cost_cents": 100,
+        "action_executed": false
+      }
+    },
+    {
+      "sequence": 6,
+      "tick": 1,
+      "code": "POLY_CHALLENGE_DELAY",
+      "explanation": "$3000.00 pending proceeds delayed from t=3 to t=9; funding contribution before settlement = $0.00",
+      "state": {
+        "capital": [
+          {
+            "venue": "wallet",
+            "settled_cents": 109900,
+            "withdrawable_cents": 9900,
+            "unrealized_cents": 0,
+            "pending_proceeds_cents": 0,
+            "pledged_reserved_cents": 100000,
+            "delayed_blocked_cents": 0
+          },
+          {
+            "venue": "hyperliquid",
+            "settled_cents": 550000,
+            "withdrawable_cents": 0,
+            "unrealized_cents": 0,
+            "pending_proceeds_cents": 0,
+            "pledged_reserved_cents": 0,
+            "delayed_blocked_cents": 0
+          },
+          {
+            "venue": "polymarket",
+            "settled_cents": 250000,
+            "withdrawable_cents": 250000,
+            "unrealized_cents": 0,
+            "pending_proceeds_cents": 300000,
+            "pledged_reserved_cents": 0,
+            "delayed_blocked_cents": 300000
+          },
+          {
+            "venue": "kalshi",
+            "settled_cents": 0,
+            "withdrawable_cents": 0,
+            "unrealized_cents": 0,
+            "pending_proceeds_cents": 500000,
+            "pledged_reserved_cents": 0,
+            "delayed_blocked_cents": 0
+          },
+          {
+            "venue": "in_transit",
+            "settled_cents": 0,
+            "withdrawable_cents": 0,
+            "unrealized_cents": 0,
+            "pending_proceeds_cents": 0,
+            "pledged_reserved_cents": 0,
+            "delayed_blocked_cents": 0
+          }
+        ],
+        "lots": [
+          {
+            "id": "wallet-ready",
+            "venue": "wallet",
+            "cents": 9900,
+            "state": {
+              "kind": "withdrawable"
+            }
+          },
+          {
+            "id": "wallet-pledged",
+            "venue": "wallet",
+            "cents": 100000,
+            "state": {
+              "kind": "pledged",
+              "detail": "existing-obligation-no-loan"
+            }
+          },
+          {
+            "id": "hl-margin",
+            "venue": "hyperliquid",
+            "cents": 400000,
+            "state": {
+              "kind": "settled_locked"
+            }
+          },
+          {
+            "id": "poly-ready",
+            "venue": "polymarket",
+            "cents": 250000,
+            "state": {
+              "kind": "withdrawable"
+            }
+          },
+          {
+            "id": "poly-payout",
+            "venue": "polymarket",
+            "cents": 300000,
+            "state": {
+              "kind": "delayed",
+              "detail": "synthetic resolution challenge"
+            }
+          },
+          {
+            "id": "kalshi-payout",
+            "venue": "kalshi",
+            "cents": 500000,
+            "state": {
+              "kind": "pending_proceeds"
+            }
+          },
+          {
+            "id": "wallet-ready-transfer-0",
+            "venue": "hyperliquid",
+            "cents": 150000,
+            "state": {
+              "kind": "settled_locked"
+            }
+          }
+        ],
+        "aggregate_equity_cents": 1709900,
+        "loan_liability_cents": 0,
+        "hl_local_equity_cents": 550000,
+        "hl_required_cents": 350000,
+        "total_cost_cents": 100,
+        "action_executed": false
+      }
+    },
+    {
+      "sequence": 7,
+      "tick": 1,
+      "code": "CHECKPOINT",
+      "explanation": "Local margin, synthetic lender limit, and equity conservation checked. Historical breaches remain latched",
+      "state": {
+        "capital": [
+          {
+            "venue": "wallet",
+            "settled_cents": 109900,
+            "withdrawable_cents": 9900,
+            "unrealized_cents": 0,
+            "pending_proceeds_cents": 0,
+            "pledged_reserved_cents": 100000,
+            "delayed_blocked_cents": 0
+          },
+          {
+            "venue": "hyperliquid",
+            "settled_cents": 550000,
+            "withdrawable_cents": 0,
+            "unrealized_cents": 0,
+            "pending_proceeds_cents": 0,
+            "pledged_reserved_cents": 0,
+            "delayed_blocked_cents": 0
+          },
+          {
+            "venue": "polymarket",
+            "settled_cents": 250000,
+            "withdrawable_cents": 250000,
+            "unrealized_cents": 0,
+            "pending_proceeds_cents": 300000,
+            "pledged_reserved_cents": 0,
+            "delayed_blocked_cents": 300000
+          },
+          {
+            "venue": "kalshi",
+            "settled_cents": 0,
+            "withdrawable_cents": 0,
+            "unrealized_cents": 0,
+            "pending_proceeds_cents": 500000,
+            "pledged_reserved_cents": 0,
+            "delayed_blocked_cents": 0
+          },
+          {
+            "venue": "in_transit",
+            "settled_cents": 0,
+            "withdrawable_cents": 0,
+            "unrealized_cents": 0,
+            "pending_proceeds_cents": 0,
+            "pledged_reserved_cents": 0,
+            "delayed_blocked_cents": 0
+          }
+        ],
+        "lots": [
+          {
+            "id": "wallet-ready",
+            "venue": "wallet",
+            "cents": 9900,
+            "state": {
+              "kind": "withdrawable"
+            }
+          },
+          {
+            "id": "wallet-pledged",
+            "venue": "wallet",
+            "cents": 100000,
+            "state": {
+              "kind": "pledged",
+              "detail": "existing-obligation-no-loan"
+            }
+          },
+          {
+            "id": "hl-margin",
+            "venue": "hyperliquid",
+            "cents": 400000,
+            "state": {
+              "kind": "settled_locked"
+            }
+          },
+          {
+            "id": "poly-ready",
+            "venue": "polymarket",
+            "cents": 250000,
+            "state": {
+              "kind": "withdrawable"
+            }
+          },
+          {
+            "id": "poly-payout",
+            "venue": "polymarket",
+            "cents": 300000,
+            "state": {
+              "kind": "delayed",
+              "detail": "synthetic resolution challenge"
+            }
+          },
+          {
+            "id": "kalshi-payout",
+            "venue": "kalshi",
+            "cents": 500000,
+            "state": {
+              "kind": "pending_proceeds"
+            }
+          },
+          {
+            "id": "wallet-ready-transfer-0",
+            "venue": "hyperliquid",
+            "cents": 150000,
+            "state": {
+              "kind": "settled_locked"
+            }
+          }
+        ],
+        "aggregate_equity_cents": 1709900,
+        "loan_liability_cents": 0,
+        "hl_local_equity_cents": 550000,
+        "hl_required_cents": 350000,
+        "total_cost_cents": 100,
+        "action_executed": false
+      }
+    },
+    {
+      "sequence": 8,
+      "tick": 2,
+      "code": "ACTION_EXECUTED",
+      "explanation": "Add one synthetic Hyperliquid position at tick 2; local equity $5500.00 meets initial requirement $5500.00. Subsequent maintenance is checked separately",
+      "state": {
+        "capital": [
+          {
+            "venue": "wallet",
+            "settled_cents": 109900,
+            "withdrawable_cents": 9900,
+            "unrealized_cents": 0,
+            "pending_proceeds_cents": 0,
+            "pledged_reserved_cents": 100000,
+            "delayed_blocked_cents": 0
+          },
+          {
+            "venue": "hyperliquid",
+            "settled_cents": 550000,
+            "withdrawable_cents": 0,
+            "unrealized_cents": 0,
+            "pending_proceeds_cents": 0,
+            "pledged_reserved_cents": 0,
+            "delayed_blocked_cents": 0
+          },
+          {
+            "venue": "polymarket",
+            "settled_cents": 250000,
+            "withdrawable_cents": 250000,
+            "unrealized_cents": 0,
+            "pending_proceeds_cents": 300000,
+            "pledged_reserved_cents": 0,
+            "delayed_blocked_cents": 300000
+          },
+          {
+            "venue": "kalshi",
+            "settled_cents": 0,
+            "withdrawable_cents": 0,
+            "unrealized_cents": 0,
+            "pending_proceeds_cents": 500000,
+            "pledged_reserved_cents": 0,
+            "delayed_blocked_cents": 0
+          },
+          {
+            "venue": "in_transit",
+            "settled_cents": 0,
+            "withdrawable_cents": 0,
+            "unrealized_cents": 0,
+            "pending_proceeds_cents": 0,
+            "pledged_reserved_cents": 0,
+            "delayed_blocked_cents": 0
+          }
+        ],
+        "lots": [
+          {
+            "id": "wallet-ready",
+            "venue": "wallet",
+            "cents": 9900,
+            "state": {
+              "kind": "withdrawable"
+            }
+          },
+          {
+            "id": "wallet-pledged",
+            "venue": "wallet",
+            "cents": 100000,
+            "state": {
+              "kind": "pledged",
+              "detail": "existing-obligation-no-loan"
+            }
+          },
+          {
+            "id": "hl-margin",
+            "venue": "hyperliquid",
+            "cents": 400000,
+            "state": {
+              "kind": "settled_locked"
+            }
+          },
+          {
+            "id": "poly-ready",
+            "venue": "polymarket",
+            "cents": 250000,
+            "state": {
+              "kind": "withdrawable"
+            }
+          },
+          {
+            "id": "poly-payout",
+            "venue": "polymarket",
+            "cents": 300000,
+            "state": {
+              "kind": "delayed",
+              "detail": "synthetic resolution challenge"
+            }
+          },
+          {
+            "id": "kalshi-payout",
+            "venue": "kalshi",
+            "cents": 500000,
+            "state": {
+              "kind": "pending_proceeds"
+            }
+          },
+          {
+            "id": "wallet-ready-transfer-0",
+            "venue": "hyperliquid",
+            "cents": 150000,
+            "state": {
+              "kind": "settled_locked"
+            }
+          }
+        ],
+        "aggregate_equity_cents": 1709900,
+        "loan_liability_cents": 0,
+        "hl_local_equity_cents": 550000,
+        "hl_required_cents": 400000,
+        "total_cost_cents": 100,
+        "action_executed": true
+      }
+    },
+    {
+      "sequence": 9,
+      "tick": 2,
+      "code": "CHECKPOINT",
+      "explanation": "Local margin, synthetic lender limit, and equity conservation checked. Historical breaches remain latched",
+      "state": {
+        "capital": [
+          {
+            "venue": "wallet",
+            "settled_cents": 109900,
+            "withdrawable_cents": 9900,
+            "unrealized_cents": 0,
+            "pending_proceeds_cents": 0,
+            "pledged_reserved_cents": 100000,
+            "delayed_blocked_cents": 0
+          },
+          {
+            "venue": "hyperliquid",
+            "settled_cents": 550000,
+            "withdrawable_cents": 0,
+            "unrealized_cents": 0,
+            "pending_proceeds_cents": 0,
+            "pledged_reserved_cents": 0,
+            "delayed_blocked_cents": 0
+          },
+          {
+            "venue": "polymarket",
+            "settled_cents": 250000,
+            "withdrawable_cents": 250000,
+            "unrealized_cents": 0,
+            "pending_proceeds_cents": 300000,
+            "pledged_reserved_cents": 0,
+            "delayed_blocked_cents": 300000
+          },
+          {
+            "venue": "kalshi",
+            "settled_cents": 0,
+            "withdrawable_cents": 0,
+            "unrealized_cents": 0,
+            "pending_proceeds_cents": 500000,
+            "pledged_reserved_cents": 0,
+            "delayed_blocked_cents": 0
+          },
+          {
+            "venue": "in_transit",
+            "settled_cents": 0,
+            "withdrawable_cents": 0,
+            "unrealized_cents": 0,
+            "pending_proceeds_cents": 0,
+            "pledged_reserved_cents": 0,
+            "delayed_blocked_cents": 0
+          }
+        ],
+        "lots": [
+          {
+            "id": "wallet-ready",
+            "venue": "wallet",
+            "cents": 9900,
+            "state": {
+              "kind": "withdrawable"
+            }
+          },
+          {
+            "id": "wallet-pledged",
+            "venue": "wallet",
+            "cents": 100000,
+            "state": {
+              "kind": "pledged",
+              "detail": "existing-obligation-no-loan"
+            }
+          },
+          {
+            "id": "hl-margin",
+            "venue": "hyperliquid",
+            "cents": 400000,
+            "state": {
+              "kind": "settled_locked"
+            }
+          },
+          {
+            "id": "poly-ready",
+            "venue": "polymarket",
+            "cents": 250000,
+            "state": {
+              "kind": "withdrawable"
+            }
+          },
+          {
+            "id": "poly-payout",
+            "venue": "polymarket",
+            "cents": 300000,
+            "state": {
+              "kind": "delayed",
+              "detail": "synthetic resolution challenge"
+            }
+          },
+          {
+            "id": "kalshi-payout",
+            "venue": "kalshi",
+            "cents": 500000,
+            "state": {
+              "kind": "pending_proceeds"
+            }
+          },
+          {
+            "id": "wallet-ready-transfer-0",
+            "venue": "hyperliquid",
+            "cents": 150000,
+            "state": {
+              "kind": "settled_locked"
+            }
+          }
+        ],
+        "aggregate_equity_cents": 1709900,
+        "loan_liability_cents": 0,
+        "hl_local_equity_cents": 550000,
+        "hl_required_cents": 400000,
+        "total_cost_cents": 100,
+        "action_executed": true
+      }
+    },
+    {
+      "sequence": 10,
+      "tick": 3,
+      "code": "KALSHI_DETERMINED",
+      "explanation": "Outcome determined; proceeds still pending until t=8. Commercial-access requirement remains UNMET",
+      "state": {
+        "capital": [
+          {
+            "venue": "wallet",
+            "settled_cents": 109900,
+            "withdrawable_cents": 9900,
+            "unrealized_cents": 0,
+            "pending_proceeds_cents": 0,
+            "pledged_reserved_cents": 100000,
+            "delayed_blocked_cents": 0
+          },
+          {
+            "venue": "hyperliquid",
+            "settled_cents": 550000,
+            "withdrawable_cents": 0,
+            "unrealized_cents": 0,
+            "pending_proceeds_cents": 0,
+            "pledged_reserved_cents": 0,
+            "delayed_blocked_cents": 0
+          },
+          {
+            "venue": "polymarket",
+            "settled_cents": 250000,
+            "withdrawable_cents": 250000,
+            "unrealized_cents": 0,
+            "pending_proceeds_cents": 300000,
+            "pledged_reserved_cents": 0,
+            "delayed_blocked_cents": 300000
+          },
+          {
+            "venue": "kalshi",
+            "settled_cents": 0,
+            "withdrawable_cents": 0,
+            "unrealized_cents": 0,
+            "pending_proceeds_cents": 500000,
+            "pledged_reserved_cents": 0,
+            "delayed_blocked_cents": 0
+          },
+          {
+            "venue": "in_transit",
+            "settled_cents": 0,
+            "withdrawable_cents": 0,
+            "unrealized_cents": 0,
+            "pending_proceeds_cents": 0,
+            "pledged_reserved_cents": 0,
+            "delayed_blocked_cents": 0
+          }
+        ],
+        "lots": [
+          {
+            "id": "wallet-ready",
+            "venue": "wallet",
+            "cents": 9900,
+            "state": {
+              "kind": "withdrawable"
+            }
+          },
+          {
+            "id": "wallet-pledged",
+            "venue": "wallet",
+            "cents": 100000,
+            "state": {
+              "kind": "pledged",
+              "detail": "existing-obligation-no-loan"
+            }
+          },
+          {
+            "id": "hl-margin",
+            "venue": "hyperliquid",
+            "cents": 400000,
+            "state": {
+              "kind": "settled_locked"
+            }
+          },
+          {
+            "id": "poly-ready",
+            "venue": "polymarket",
+            "cents": 250000,
+            "state": {
+              "kind": "withdrawable"
+            }
+          },
+          {
+            "id": "poly-payout",
+            "venue": "polymarket",
+            "cents": 300000,
+            "state": {
+              "kind": "delayed",
+              "detail": "synthetic resolution challenge"
+            }
+          },
+          {
+            "id": "kalshi-payout",
+            "venue": "kalshi",
+            "cents": 500000,
+            "state": {
+              "kind": "pending_proceeds"
+            }
+          },
+          {
+            "id": "wallet-ready-transfer-0",
+            "venue": "hyperliquid",
+            "cents": 150000,
+            "state": {
+              "kind": "settled_locked"
+            }
+          }
+        ],
+        "aggregate_equity_cents": 1709900,
+        "loan_liability_cents": 0,
+        "hl_local_equity_cents": 550000,
+        "hl_required_cents": 400000,
+        "total_cost_cents": 100,
+        "action_executed": true
+      }
+    },
+    {
+      "sequence": 11,
+      "tick": 3,
+      "code": "CHECKPOINT",
+      "explanation": "Local margin, synthetic lender limit, and equity conservation checked. Historical breaches remain latched",
+      "state": {
+        "capital": [
+          {
+            "venue": "wallet",
+            "settled_cents": 109900,
+            "withdrawable_cents": 9900,
+            "unrealized_cents": 0,
+            "pending_proceeds_cents": 0,
+            "pledged_reserved_cents": 100000,
+            "delayed_blocked_cents": 0
+          },
+          {
+            "venue": "hyperliquid",
+            "settled_cents": 550000,
+            "withdrawable_cents": 0,
+            "unrealized_cents": 0,
+            "pending_proceeds_cents": 0,
+            "pledged_reserved_cents": 0,
+            "delayed_blocked_cents": 0
+          },
+          {
+            "venue": "polymarket",
+            "settled_cents": 250000,
+            "withdrawable_cents": 250000,
+            "unrealized_cents": 0,
+            "pending_proceeds_cents": 300000,
+            "pledged_reserved_cents": 0,
+            "delayed_blocked_cents": 300000
+          },
+          {
+            "venue": "kalshi",
+            "settled_cents": 0,
+            "withdrawable_cents": 0,
+            "unrealized_cents": 0,
+            "pending_proceeds_cents": 500000,
+            "pledged_reserved_cents": 0,
+            "delayed_blocked_cents": 0
+          },
+          {
+            "venue": "in_transit",
+            "settled_cents": 0,
+            "withdrawable_cents": 0,
+            "unrealized_cents": 0,
+            "pending_proceeds_cents": 0,
+            "pledged_reserved_cents": 0,
+            "delayed_blocked_cents": 0
+          }
+        ],
+        "lots": [
+          {
+            "id": "wallet-ready",
+            "venue": "wallet",
+            "cents": 9900,
+            "state": {
+              "kind": "withdrawable"
+            }
+          },
+          {
+            "id": "wallet-pledged",
+            "venue": "wallet",
+            "cents": 100000,
+            "state": {
+              "kind": "pledged",
+              "detail": "existing-obligation-no-loan"
+            }
+          },
+          {
+            "id": "hl-margin",
+            "venue": "hyperliquid",
+            "cents": 400000,
+            "state": {
+              "kind": "settled_locked"
+            }
+          },
+          {
+            "id": "poly-ready",
+            "venue": "polymarket",
+            "cents": 250000,
+            "state": {
+              "kind": "withdrawable"
+            }
+          },
+          {
+            "id": "poly-payout",
+            "venue": "polymarket",
+            "cents": 300000,
+            "state": {
+              "kind": "delayed",
+              "detail": "synthetic resolution challenge"
+            }
+          },
+          {
+            "id": "kalshi-payout",
+            "venue": "kalshi",
+            "cents": 500000,
+            "state": {
+              "kind": "pending_proceeds"
+            }
+          },
+          {
+            "id": "wallet-ready-transfer-0",
+            "venue": "hyperliquid",
+            "cents": 150000,
+            "state": {
+              "kind": "settled_locked"
+            }
+          }
+        ],
+        "aggregate_equity_cents": 1709900,
+        "loan_liability_cents": 0,
+        "hl_local_equity_cents": 550000,
+        "hl_required_cents": 400000,
+        "total_cost_cents": 100,
+        "action_executed": true
+      }
+    },
+    {
+      "sequence": 12,
+      "tick": 4,
+      "code": "CHECKPOINT",
+      "explanation": "Local margin, synthetic lender limit, and equity conservation checked. Historical breaches remain latched",
+      "state": {
+        "capital": [
+          {
+            "venue": "wallet",
+            "settled_cents": 109900,
+            "withdrawable_cents": 9900,
+            "unrealized_cents": 0,
+            "pending_proceeds_cents": 0,
+            "pledged_reserved_cents": 100000,
+            "delayed_blocked_cents": 0
+          },
+          {
+            "venue": "hyperliquid",
+            "settled_cents": 550000,
+            "withdrawable_cents": 0,
+            "unrealized_cents": 0,
+            "pending_proceeds_cents": 0,
+            "pledged_reserved_cents": 0,
+            "delayed_blocked_cents": 0
+          },
+          {
+            "venue": "polymarket",
+            "settled_cents": 250000,
+            "withdrawable_cents": 250000,
+            "unrealized_cents": 0,
+            "pending_proceeds_cents": 300000,
+            "pledged_reserved_cents": 0,
+            "delayed_blocked_cents": 300000
+          },
+          {
+            "venue": "kalshi",
+            "settled_cents": 0,
+            "withdrawable_cents": 0,
+            "unrealized_cents": 0,
+            "pending_proceeds_cents": 500000,
+            "pledged_reserved_cents": 0,
+            "delayed_blocked_cents": 0
+          },
+          {
+            "venue": "in_transit",
+            "settled_cents": 0,
+            "withdrawable_cents": 0,
+            "unrealized_cents": 0,
+            "pending_proceeds_cents": 0,
+            "pledged_reserved_cents": 0,
+            "delayed_blocked_cents": 0
+          }
+        ],
+        "lots": [
+          {
+            "id": "wallet-ready",
+            "venue": "wallet",
+            "cents": 9900,
+            "state": {
+              "kind": "withdrawable"
+            }
+          },
+          {
+            "id": "wallet-pledged",
+            "venue": "wallet",
+            "cents": 100000,
+            "state": {
+              "kind": "pledged",
+              "detail": "existing-obligation-no-loan"
+            }
+          },
+          {
+            "id": "hl-margin",
+            "venue": "hyperliquid",
+            "cents": 400000,
+            "state": {
+              "kind": "settled_locked"
+            }
+          },
+          {
+            "id": "poly-ready",
+            "venue": "polymarket",
+            "cents": 250000,
+            "state": {
+              "kind": "withdrawable"
+            }
+          },
+          {
+            "id": "poly-payout",
+            "venue": "polymarket",
+            "cents": 300000,
+            "state": {
+              "kind": "delayed",
+              "detail": "synthetic resolution challenge"
+            }
+          },
+          {
+            "id": "kalshi-payout",
+            "venue": "kalshi",
+            "cents": 500000,
+            "state": {
+              "kind": "pending_proceeds"
+            }
+          },
+          {
+            "id": "wallet-ready-transfer-0",
+            "venue": "hyperliquid",
+            "cents": 150000,
+            "state": {
+              "kind": "settled_locked"
+            }
+          }
+        ],
+        "aggregate_equity_cents": 1709900,
+        "loan_liability_cents": 0,
+        "hl_local_equity_cents": 550000,
+        "hl_required_cents": 400000,
+        "total_cost_cents": 100,
+        "action_executed": true
+      }
+    },
+    {
+      "sequence": 13,
+      "tick": 5,
+      "code": "PRICE_MOVE",
+      "explanation": "Synthetic mark move: existing-position loss $2000.00, proposed-position loss $1000.00; no invented cash settlement of unrealized P&L",
+      "state": {
+        "capital": [
+          {
+            "venue": "wallet",
+            "settled_cents": 109900,
+            "withdrawable_cents": 9900,
+            "unrealized_cents": 0,
+            "pending_proceeds_cents": 0,
+            "pledged_reserved_cents": 100000,
+            "delayed_blocked_cents": 0
+          },
+          {
+            "venue": "hyperliquid",
+            "settled_cents": 550000,
+            "withdrawable_cents": 0,
+            "unrealized_cents": -300000,
+            "pending_proceeds_cents": 0,
+            "pledged_reserved_cents": 0,
+            "delayed_blocked_cents": 0
+          },
+          {
+            "venue": "polymarket",
+            "settled_cents": 250000,
+            "withdrawable_cents": 250000,
+            "unrealized_cents": 0,
+            "pending_proceeds_cents": 300000,
+            "pledged_reserved_cents": 0,
+            "delayed_blocked_cents": 300000
+          },
+          {
+            "venue": "kalshi",
+            "settled_cents": 0,
+            "withdrawable_cents": 0,
+            "unrealized_cents": 0,
+            "pending_proceeds_cents": 500000,
+            "pledged_reserved_cents": 0,
+            "delayed_blocked_cents": 0
+          },
+          {
+            "venue": "in_transit",
+            "settled_cents": 0,
+            "withdrawable_cents": 0,
+            "unrealized_cents": 0,
+            "pending_proceeds_cents": 0,
+            "pledged_reserved_cents": 0,
+            "delayed_blocked_cents": 0
+          }
+        ],
+        "lots": [
+          {
+            "id": "wallet-ready",
+            "venue": "wallet",
+            "cents": 9900,
+            "state": {
+              "kind": "withdrawable"
+            }
+          },
+          {
+            "id": "wallet-pledged",
+            "venue": "wallet",
+            "cents": 100000,
+            "state": {
+              "kind": "pledged",
+              "detail": "existing-obligation-no-loan"
+            }
+          },
+          {
+            "id": "hl-margin",
+            "venue": "hyperliquid",
+            "cents": 400000,
+            "state": {
+              "kind": "settled_locked"
+            }
+          },
+          {
+            "id": "poly-ready",
+            "venue": "polymarket",
+            "cents": 250000,
+            "state": {
+              "kind": "withdrawable"
+            }
+          },
+          {
+            "id": "poly-payout",
+            "venue": "polymarket",
+            "cents": 300000,
+            "state": {
+              "kind": "delayed",
+              "detail": "synthetic resolution challenge"
+            }
+          },
+          {
+            "id": "kalshi-payout",
+            "venue": "kalshi",
+            "cents": 500000,
+            "state": {
+              "kind": "pending_proceeds"
+            }
+          },
+          {
+            "id": "wallet-ready-transfer-0",
+            "venue": "hyperliquid",
+            "cents": 150000,
+            "state": {
+              "kind": "settled_locked"
+            }
+          }
+        ],
+        "aggregate_equity_cents": 1409900,
+        "loan_liability_cents": 0,
+        "hl_local_equity_cents": 250000,
+        "hl_required_cents": 400000,
+        "total_cost_cents": 100,
+        "action_executed": true
+      }
+    },
+    {
+      "sequence": 14,
+      "tick": 5,
+      "code": "HL_MARGIN_UNMET",
+      "explanation": "Aggregate marked equity $14099.00 is positive; Hyperliquid has $2500.00 against local maintenance $4000.00; shortfall $1500.00. External pending/pledged capital is not margin in time",
+      "state": {
+        "capital": [
+          {
+            "venue": "wallet",
+            "settled_cents": 109900,
+            "withdrawable_cents": 9900,
+            "unrealized_cents": 0,
+            "pending_proceeds_cents": 0,
+            "pledged_reserved_cents": 100000,
+            "delayed_blocked_cents": 0
+          },
+          {
+            "venue": "hyperliquid",
+            "settled_cents": 550000,
+            "withdrawable_cents": 0,
+            "unrealized_cents": -300000,
+            "pending_proceeds_cents": 0,
+            "pledged_reserved_cents": 0,
+            "delayed_blocked_cents": 0
+          },
+          {
+            "venue": "polymarket",
+            "settled_cents": 250000,
+            "withdrawable_cents": 250000,
+            "unrealized_cents": 0,
+            "pending_proceeds_cents": 300000,
+            "pledged_reserved_cents": 0,
+            "delayed_blocked_cents": 300000
+          },
+          {
+            "venue": "kalshi",
+            "settled_cents": 0,
+            "withdrawable_cents": 0,
+            "unrealized_cents": 0,
+            "pending_proceeds_cents": 500000,
+            "pledged_reserved_cents": 0,
+            "delayed_blocked_cents": 0
+          },
+          {
+            "venue": "in_transit",
+            "settled_cents": 0,
+            "withdrawable_cents": 0,
+            "unrealized_cents": 0,
+            "pending_proceeds_cents": 0,
+            "pledged_reserved_cents": 0,
+            "delayed_blocked_cents": 0
+          }
+        ],
+        "lots": [
+          {
+            "id": "wallet-ready",
+            "venue": "wallet",
+            "cents": 9900,
+            "state": {
+              "kind": "withdrawable"
+            }
+          },
+          {
+            "id": "wallet-pledged",
+            "venue": "wallet",
+            "cents": 100000,
+            "state": {
+              "kind": "pledged",
+              "detail": "existing-obligation-no-loan"
+            }
+          },
+          {
+            "id": "hl-margin",
+            "venue": "hyperliquid",
+            "cents": 400000,
+            "state": {
+              "kind": "settled_locked"
+            }
+          },
+          {
+            "id": "poly-ready",
+            "venue": "polymarket",
+            "cents": 250000,
+            "state": {
+              "kind": "withdrawable"
+            }
+          },
+          {
+            "id": "poly-payout",
+            "venue": "polymarket",
+            "cents": 300000,
+            "state": {
+              "kind": "delayed",
+              "detail": "synthetic resolution challenge"
+            }
+          },
+          {
+            "id": "kalshi-payout",
+            "venue": "kalshi",
+            "cents": 500000,
+            "state": {
+              "kind": "pending_proceeds"
+            }
+          },
+          {
+            "id": "wallet-ready-transfer-0",
+            "venue": "hyperliquid",
+            "cents": 150000,
+            "state": {
+              "kind": "settled_locked"
+            }
+          }
+        ],
+        "aggregate_equity_cents": 1409900,
+        "loan_liability_cents": 0,
+        "hl_local_equity_cents": 250000,
+        "hl_required_cents": 400000,
+        "total_cost_cents": 100,
+        "action_executed": true
+      }
+    },
+    {
+      "sequence": 15,
+      "tick": 5,
+      "code": "CHECKPOINT",
+      "explanation": "Local margin, synthetic lender limit, and equity conservation checked. Historical breaches remain latched",
+      "state": {
+        "capital": [
+          {
+            "venue": "wallet",
+            "settled_cents": 109900,
+            "withdrawable_cents": 9900,
+            "unrealized_cents": 0,
+            "pending_proceeds_cents": 0,
+            "pledged_reserved_cents": 100000,
+            "delayed_blocked_cents": 0
+          },
+          {
+            "venue": "hyperliquid",
+            "settled_cents": 550000,
+            "withdrawable_cents": 0,
+            "unrealized_cents": -300000,
+            "pending_proceeds_cents": 0,
+            "pledged_reserved_cents": 0,
+            "delayed_blocked_cents": 0
+          },
+          {
+            "venue": "polymarket",
+            "settled_cents": 250000,
+            "withdrawable_cents": 250000,
+            "unrealized_cents": 0,
+            "pending_proceeds_cents": 300000,
+            "pledged_reserved_cents": 0,
+            "delayed_blocked_cents": 300000
+          },
+          {
+            "venue": "kalshi",
+            "settled_cents": 0,
+            "withdrawable_cents": 0,
+            "unrealized_cents": 0,
+            "pending_proceeds_cents": 500000,
+            "pledged_reserved_cents": 0,
+            "delayed_blocked_cents": 0
+          },
+          {
+            "venue": "in_transit",
+            "settled_cents": 0,
+            "withdrawable_cents": 0,
+            "unrealized_cents": 0,
+            "pending_proceeds_cents": 0,
+            "pledged_reserved_cents": 0,
+            "delayed_blocked_cents": 0
+          }
+        ],
+        "lots": [
+          {
+            "id": "wallet-ready",
+            "venue": "wallet",
+            "cents": 9900,
+            "state": {
+              "kind": "withdrawable"
+            }
+          },
+          {
+            "id": "wallet-pledged",
+            "venue": "wallet",
+            "cents": 100000,
+            "state": {
+              "kind": "pledged",
+              "detail": "existing-obligation-no-loan"
+            }
+          },
+          {
+            "id": "hl-margin",
+            "venue": "hyperliquid",
+            "cents": 400000,
+            "state": {
+              "kind": "settled_locked"
+            }
+          },
+          {
+            "id": "poly-ready",
+            "venue": "polymarket",
+            "cents": 250000,
+            "state": {
+              "kind": "withdrawable"
+            }
+          },
+          {
+            "id": "poly-payout",
+            "venue": "polymarket",
+            "cents": 300000,
+            "state": {
+              "kind": "delayed",
+              "detail": "synthetic resolution challenge"
+            }
+          },
+          {
+            "id": "kalshi-payout",
+            "venue": "kalshi",
+            "cents": 500000,
+            "state": {
+              "kind": "pending_proceeds"
+            }
+          },
+          {
+            "id": "wallet-ready-transfer-0",
+            "venue": "hyperliquid",
+            "cents": 150000,
+            "state": {
+              "kind": "settled_locked"
+            }
+          }
+        ],
+        "aggregate_equity_cents": 1409900,
+        "loan_liability_cents": 0,
+        "hl_local_equity_cents": 250000,
+        "hl_required_cents": 400000,
+        "total_cost_cents": 100,
+        "action_executed": true
+      }
+    },
+    {
+      "sequence": 16,
+      "tick": 6,
+      "code": "CHECKPOINT",
+      "explanation": "Local margin, synthetic lender limit, and equity conservation checked. Historical breaches remain latched",
+      "state": {
+        "capital": [
+          {
+            "venue": "wallet",
+            "settled_cents": 109900,
+            "withdrawable_cents": 9900,
+            "unrealized_cents": 0,
+            "pending_proceeds_cents": 0,
+            "pledged_reserved_cents": 100000,
+            "delayed_blocked_cents": 0
+          },
+          {
+            "venue": "hyperliquid",
+            "settled_cents": 550000,
+            "withdrawable_cents": 0,
+            "unrealized_cents": -300000,
+            "pending_proceeds_cents": 0,
+            "pledged_reserved_cents": 0,
+            "delayed_blocked_cents": 0
+          },
+          {
+            "venue": "polymarket",
+            "settled_cents": 250000,
+            "withdrawable_cents": 250000,
+            "unrealized_cents": 0,
+            "pending_proceeds_cents": 300000,
+            "pledged_reserved_cents": 0,
+            "delayed_blocked_cents": 300000
+          },
+          {
+            "venue": "kalshi",
+            "settled_cents": 0,
+            "withdrawable_cents": 0,
+            "unrealized_cents": 0,
+            "pending_proceeds_cents": 500000,
+            "pledged_reserved_cents": 0,
+            "delayed_blocked_cents": 0
+          },
+          {
+            "venue": "in_transit",
+            "settled_cents": 0,
+            "withdrawable_cents": 0,
+            "unrealized_cents": 0,
+            "pending_proceeds_cents": 0,
+            "pledged_reserved_cents": 0,
+            "delayed_blocked_cents": 0
+          }
+        ],
+        "lots": [
+          {
+            "id": "wallet-ready",
+            "venue": "wallet",
+            "cents": 9900,
+            "state": {
+              "kind": "withdrawable"
+            }
+          },
+          {
+            "id": "wallet-pledged",
+            "venue": "wallet",
+            "cents": 100000,
+            "state": {
+              "kind": "pledged",
+              "detail": "existing-obligation-no-loan"
+            }
+          },
+          {
+            "id": "hl-margin",
+            "venue": "hyperliquid",
+            "cents": 400000,
+            "state": {
+              "kind": "settled_locked"
+            }
+          },
+          {
+            "id": "poly-ready",
+            "venue": "polymarket",
+            "cents": 250000,
+            "state": {
+              "kind": "withdrawable"
+            }
+          },
+          {
+            "id": "poly-payout",
+            "venue": "polymarket",
+            "cents": 300000,
+            "state": {
+              "kind": "delayed",
+              "detail": "synthetic resolution challenge"
+            }
+          },
+          {
+            "id": "kalshi-payout",
+            "venue": "kalshi",
+            "cents": 500000,
+            "state": {
+              "kind": "pending_proceeds"
+            }
+          },
+          {
+            "id": "wallet-ready-transfer-0",
+            "venue": "hyperliquid",
+            "cents": 150000,
+            "state": {
+              "kind": "settled_locked"
+            }
+          }
+        ],
+        "aggregate_equity_cents": 1409900,
+        "loan_liability_cents": 0,
+        "hl_local_equity_cents": 250000,
+        "hl_required_cents": 400000,
+        "total_cost_cents": 100,
+        "action_executed": true
+      }
+    },
+    {
+      "sequence": 17,
+      "tick": 6,
+      "code": "PLAN_FAILED",
+      "explanation": "Decision is limited to t=0..6 and the entered rules. No liquidation fills or post-horizon repayment modeled",
+      "state": {
+        "capital": [
+          {
+            "venue": "wallet",
+            "settled_cents": 109900,
+            "withdrawable_cents": 9900,
+            "unrealized_cents": 0,
+            "pending_proceeds_cents": 0,
+            "pledged_reserved_cents": 100000,
+            "delayed_blocked_cents": 0
+          },
+          {
+            "venue": "hyperliquid",
+            "settled_cents": 550000,
+            "withdrawable_cents": 0,
+            "unrealized_cents": -300000,
+            "pending_proceeds_cents": 0,
+            "pledged_reserved_cents": 0,
+            "delayed_blocked_cents": 0
+          },
+          {
+            "venue": "polymarket",
+            "settled_cents": 250000,
+            "withdrawable_cents": 250000,
+            "unrealized_cents": 0,
+            "pending_proceeds_cents": 300000,
+            "pledged_reserved_cents": 0,
+            "delayed_blocked_cents": 300000
+          },
+          {
+            "venue": "kalshi",
+            "settled_cents": 0,
+            "withdrawable_cents": 0,
+            "unrealized_cents": 0,
+            "pending_proceeds_cents": 500000,
+            "pledged_reserved_cents": 0,
+            "delayed_blocked_cents": 0
+          },
+          {
+            "venue": "in_transit",
+            "settled_cents": 0,
+            "withdrawable_cents": 0,
+            "unrealized_cents": 0,
+            "pending_proceeds_cents": 0,
+            "pledged_reserved_cents": 0,
+            "delayed_blocked_cents": 0
+          }
+        ],
+        "lots": [
+          {
+            "id": "wallet-ready",
+            "venue": "wallet",
+            "cents": 9900,
+            "state": {
+              "kind": "withdrawable"
+            }
+          },
+          {
+            "id": "wallet-pledged",
+            "venue": "wallet",
+            "cents": 100000,
+            "state": {
+              "kind": "pledged",
+              "detail": "existing-obligation-no-loan"
+            }
+          },
+          {
+            "id": "hl-margin",
+            "venue": "hyperliquid",
+            "cents": 400000,
+            "state": {
+              "kind": "settled_locked"
+            }
+          },
+          {
+            "id": "poly-ready",
+            "venue": "polymarket",
+            "cents": 250000,
+            "state": {
+              "kind": "withdrawable"
+            }
+          },
+          {
+            "id": "poly-payout",
+            "venue": "polymarket",
+            "cents": 300000,
+            "state": {
+              "kind": "delayed",
+              "detail": "synthetic resolution challenge"
+            }
+          },
+          {
+            "id": "kalshi-payout",
+            "venue": "kalshi",
+            "cents": 500000,
+            "state": {
+              "kind": "pending_proceeds"
+            }
+          },
+          {
+            "id": "wallet-ready-transfer-0",
+            "venue": "hyperliquid",
+            "cents": 150000,
+            "state": {
+              "kind": "settled_locked"
+            }
+          }
+        ],
+        "aggregate_equity_cents": 1409900,
+        "loan_liability_cents": 0,
+        "hl_local_equity_cents": 250000,
+        "hl_required_cents": 400000,
+        "total_cost_cents": 100,
+        "action_executed": true
+      }
+    }
+  ],
+  "final_state": {
+    "capital": [
+      {
+        "venue": "wallet",
+        "settled_cents": 109900,
+        "withdrawable_cents": 9900,
+        "unrealized_cents": 0,
+        "pending_proceeds_cents": 0,
+        "pledged_reserved_cents": 100000,
+        "delayed_blocked_cents": 0
+      },
+      {
+        "venue": "hyperliquid",
+        "settled_cents": 550000,
+        "withdrawable_cents": 0,
+        "unrealized_cents": -300000,
+        "pending_proceeds_cents": 0,
+        "pledged_reserved_cents": 0,
+        "delayed_blocked_cents": 0
+      },
+      {
+        "venue": "polymarket",
+        "settled_cents": 250000,
+        "withdrawable_cents": 250000,
+        "unrealized_cents": 0,
+        "pending_proceeds_cents": 300000,
+        "pledged_reserved_cents": 0,
+        "delayed_blocked_cents": 300000
+      },
+      {
+        "venue": "kalshi",
+        "settled_cents": 0,
+        "withdrawable_cents": 0,
+        "unrealized_cents": 0,
+        "pending_proceeds_cents": 500000,
+        "pledged_reserved_cents": 0,
+        "delayed_blocked_cents": 0
+      },
+      {
+        "venue": "in_transit",
+        "settled_cents": 0,
+        "withdrawable_cents": 0,
+        "unrealized_cents": 0,
+        "pending_proceeds_cents": 0,
+        "pledged_reserved_cents": 0,
+        "delayed_blocked_cents": 0
+      }
+    ],
+    "lots": [
+      {
+        "id": "wallet-ready",
+        "venue": "wallet",
+        "cents": 9900,
+        "state": {
+          "kind": "withdrawable"
+        }
+      },
+      {
+        "id": "wallet-pledged",
+        "venue": "wallet",
+        "cents": 100000,
+        "state": {
+          "kind": "pledged",
+          "detail": "existing-obligation-no-loan"
+        }
+      },
+      {
+        "id": "hl-margin",
+        "venue": "hyperliquid",
+        "cents": 400000,
+        "state": {
+          "kind": "settled_locked"
+        }
+      },
+      {
+        "id": "poly-ready",
+        "venue": "polymarket",
+        "cents": 250000,
+        "state": {
+          "kind": "withdrawable"
+        }
+      },
+      {
+        "id": "poly-payout",
+        "venue": "polymarket",
+        "cents": 300000,
+        "state": {
+          "kind": "delayed",
+          "detail": "synthetic resolution challenge"
+        }
+      },
+      {
+        "id": "kalshi-payout",
+        "venue": "kalshi",
+        "cents": 500000,
+        "state": {
+          "kind": "pending_proceeds"
+        }
+      },
+      {
+        "id": "wallet-ready-transfer-0",
+        "venue": "hyperliquid",
+        "cents": 150000,
+        "state": {
+          "kind": "settled_locked"
+        }
+      }
+    ],
+    "aggregate_equity_cents": 1409900,
+    "loan_liability_cents": 0,
+    "hl_local_equity_cents": 250000,
+    "hl_required_cents": 400000,
+    "total_cost_cents": 100,
+    "action_executed": true
+  }
+}

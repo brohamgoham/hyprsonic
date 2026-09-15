@@ -1,0 +1,53 @@
+HYPRSONIC LANE 1 PHASE 0 — SYNTHETIC, OFFLINE, NO EXECUTION
+Fixture=lane1-phase0-v1 | plan=wallet | scenario=delayed | horizon=6 ticks
+Capital states (cents rendered as synthetic USD; columns overlap, DO NOT SUM):
+Location           Settled Withdrawable   Unrealized      Pending  Pledged/resvd Delayed/blocked
+Wallet            $2600.00     $1600.00        $0.00        $0.00       $1000.00           $0.00
+Hyperliquid       $4000.00        $0.00        $0.00        $0.00          $0.00           $0.00
+Polymarket        $2500.00     $2500.00        $0.00     $3000.00          $0.00           $0.00
+Kalshi               $0.00        $0.00        $0.00     $5000.00          $0.00           $0.00
+InTransit            $0.00        $0.00        $0.00        $0.00          $0.00           $0.00
+Marked equity=$17100.00 | loan liability=$0.00 | costs=$0.00 | HL local=$4000.00 required=$3500.00
+#001 t=0 [INITIAL_STATE] SYNTHETIC USD CENTS; marked equity includes pending claims at fixture marks. It is not spendable cash. Kalshi commercial access: UNMET
+      HL $4000.00/$3500.00 | aggregate $17100.00 | costs $0.00 | liability $0.00
+#002 t=0 [TRANSFER_RESERVED] wallet-ready: reserve $1500.00, charge $1.00; source funds no longer withdrawable
+      HL $4000.00/$3500.00 | aggregate $17099.00 | costs $1.00 | liability $0.00
+#003 t=0 [TRANSFER_SENT] wallet-ready-transfer-0: Hyperliquid receives funds only at t=1; no credit before arrival
+      HL $4000.00/$3500.00 | aggregate $17099.00 | costs $1.00 | liability $0.00
+#004 t=1 [TRANSFER_ARRIVED] wallet-ready-transfer-0: $1500.00 now counts toward local Hyperliquid margin
+      HL $5500.00/$3500.00 | aggregate $17099.00 | costs $1.00 | liability $0.00
+#005 t=1 [KALSHI_CLOSED] Market closed; determination and settlement are still separate future events. Contribution to Hyperliquid funding: $0.00
+      HL $5500.00/$3500.00 | aggregate $17099.00 | costs $1.00 | liability $0.00
+#006 t=1 [POLY_CHALLENGE_DELAY] $3000.00 pending proceeds delayed from t=3 to t=9; funding contribution before settlement = $0.00
+      HL $5500.00/$3500.00 | aggregate $17099.00 | costs $1.00 | liability $0.00
+#007 t=1 [CHECKPOINT] Local margin, synthetic lender limit, and equity conservation checked. Historical breaches remain latched
+      HL $5500.00/$3500.00 | aggregate $17099.00 | costs $1.00 | liability $0.00
+#008 t=2 [ACTION_EXECUTED] Add one synthetic Hyperliquid position at tick 2; local equity $5500.00 meets initial requirement $5500.00. Subsequent maintenance is checked separately
+      HL $5500.00/$4000.00 | aggregate $17099.00 | costs $1.00 | liability $0.00
+#009 t=2 [CHECKPOINT] Local margin, synthetic lender limit, and equity conservation checked. Historical breaches remain latched
+      HL $5500.00/$4000.00 | aggregate $17099.00 | costs $1.00 | liability $0.00
+#010 t=3 [KALSHI_DETERMINED] Outcome determined; proceeds still pending until t=8. Commercial-access requirement remains UNMET
+      HL $5500.00/$4000.00 | aggregate $17099.00 | costs $1.00 | liability $0.00
+#011 t=3 [CHECKPOINT] Local margin, synthetic lender limit, and equity conservation checked. Historical breaches remain latched
+      HL $5500.00/$4000.00 | aggregate $17099.00 | costs $1.00 | liability $0.00
+#012 t=4 [CHECKPOINT] Local margin, synthetic lender limit, and equity conservation checked. Historical breaches remain latched
+      HL $5500.00/$4000.00 | aggregate $17099.00 | costs $1.00 | liability $0.00
+#013 t=5 [PRICE_MOVE] Synthetic mark move: existing-position loss $2000.00, proposed-position loss $1000.00; no invented cash settlement of unrealized P&L
+      HL $2500.00/$4000.00 | aggregate $14099.00 | costs $1.00 | liability $0.00
+#014 t=5 [HL_MARGIN_UNMET] Aggregate marked equity $14099.00 is positive; Hyperliquid has $2500.00 against local maintenance $4000.00; shortfall $1500.00. External pending/pledged capital is not margin in time
+      HL $2500.00/$4000.00 | aggregate $14099.00 | costs $1.00 | liability $0.00
+#015 t=5 [CHECKPOINT] Local margin, synthetic lender limit, and equity conservation checked. Historical breaches remain latched
+      HL $2500.00/$4000.00 | aggregate $14099.00 | costs $1.00 | liability $0.00
+#016 t=6 [CHECKPOINT] Local margin, synthetic lender limit, and equity conservation checked. Historical breaches remain latched
+      HL $2500.00/$4000.00 | aggregate $14099.00 | costs $1.00 | liability $0.00
+#017 t=6 [PLAN_FAILED] Decision is limited to t=0..6 and the entered rules. No liquidation fills or post-horizon repayment modeled
+      HL $2500.00/$4000.00 | aggregate $14099.00 | costs $1.00 | liability $0.00
+Capital states (cents rendered as synthetic USD; columns overlap, DO NOT SUM):
+Location           Settled Withdrawable   Unrealized      Pending  Pledged/resvd Delayed/blocked
+Wallet            $1099.00       $99.00        $0.00        $0.00       $1000.00           $0.00
+Hyperliquid       $5500.00        $0.00    -$3000.00        $0.00          $0.00           $0.00
+Polymarket        $2500.00     $2500.00        $0.00     $3000.00          $0.00        $3000.00
+Kalshi               $0.00        $0.00        $0.00     $5000.00          $0.00           $0.00
+InTransit            $0.00        $0.00        $0.00        $0.00          $0.00           $0.00
+Marked equity=$14099.00 | loan liability=$0.00 | costs=$1.00 | HL local=$2500.00 required=$4000.00
+RESULT=FAIL (selected horizon only)

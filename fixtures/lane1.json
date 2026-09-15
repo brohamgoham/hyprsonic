@@ -1,0 +1,55 @@
+{
+  "id": "lane1-phase0-v1",
+  "synthetic": true,
+  "horizon": 6,
+  "action": {
+    "description": "Add one synthetic Hyperliquid position at tick 2",
+    "at": 2,
+    "initial_margin_cents": 550000,
+    "maintenance_cents": 400000
+  },
+  "capital": {
+    "wallet_withdrawable_cents": 160000,
+    "wallet_already_pledged_cents": 100000,
+    "hl_settled_cents": 400000,
+    "poly_withdrawable_cents": 250000,
+    "poly_pending_cents": 300000,
+    "kalshi_pending_cents": 500000
+  },
+  "rules": {
+    "hl_existing_maintenance_cents": 350000,
+    "poly_settlement_at": 3,
+    "poly_challenge_at": 1,
+    "poly_delayed_settlement_at": 9,
+    "kalshi_close_at": 1,
+    "kalshi_determination_at": 3,
+    "kalshi_settlement_at": 8,
+    "kalshi_commercial_access_met": false,
+    "transfer_ticks": 1,
+    "wallet_transfer_cents": 150000,
+    "wallet_fee_cents": 100,
+    "withdraw_transfer_cents": 220000,
+    "withdraw_fee_cents": 200,
+    "payout_sweep_fee_cents": 100,
+    "reduce_fee_cents": 3000,
+    "reduce_remaining_exposure_bps": 5000,
+    "reduce_margin_relief_cents": 100000
+  },
+  "price_move": {
+    "at": 5,
+    "existing_position_loss_cents": 200000,
+    "proposed_position_loss_cents": 100000
+  },
+  "quote": {
+    "id": "SYNTHETIC-QUOTE-001",
+    "synthetic": true,
+    "principal_cents": 320000,
+    "upfront_fee_cents": 2000,
+    "interest_bps_for_horizon": 50,
+    "max_ltv_bps": 8000,
+    "fund_at": 1,
+    "expires_at": 2,
+    "matures_at": 10,
+    "collateral_lots": ["wallet-ready", "poly-ready"]
+  }
+}

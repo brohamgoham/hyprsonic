@@ -1,0 +1,42 @@
+HYPRSONIC LANE 1 PHASE 0 — SYNTHETIC CAPITAL PLAN DEMO
+Question: can this proposed change be funded and maintained under the selected scenario?
+Action: Add one synthetic Hyperliquid position at tick 2. No live adapter, real financing offer, or trading authority.
+Both scenarios use the SAME price move; only Polymarket settlement timing changes.
+Kalshi: close=1 determination=3 settlement=8; commercial access UNMET.
+Capital states (cents rendered as synthetic USD; columns overlap, DO NOT SUM):
+Location           Settled Withdrawable   Unrealized      Pending  Pledged/resvd Delayed/blocked
+Wallet            $2600.00     $1600.00        $0.00        $0.00       $1000.00           $0.00
+Hyperliquid       $4000.00        $0.00        $0.00        $0.00          $0.00           $0.00
+Polymarket        $2500.00     $2500.00        $0.00     $3000.00          $0.00           $0.00
+Kalshi               $0.00        $0.00        $0.00     $5000.00          $0.00           $0.00
+InTransit            $0.00        $0.00        $0.00        $0.00          $0.00           $0.00
+Marked equity=$17100.00 | loan liability=$0.00 | costs=$0.00 | HL local=$4000.00 required=$3500.00
+
+Plans are independent alternatives; no collateral is shared between replays.
+All plans sweep Polymarket proceeds ONLY after confirmed settlement plus transfer delay.
+Scenario   Plan       Outcome          Cost     HL local  HL required    Liability
+on-time    wallet     SURVIVES        $2.00     $5499.00     $4000.00        $0.00
+on-time    withdraw   SURVIVES        $3.00     $6199.00     $4000.00        $0.00
+on-time    reduce     SURVIVES       $32.00     $6469.00     $3000.00        $0.00
+on-time    finance    SURVIVES       $37.00     $7179.00     $4000.00     $3216.00
+delayed    wallet     FAIL            $1.00     $2500.00     $4000.00        $0.00
+delayed    withdraw   FAIL            $2.00     $3200.00     $4000.00        $0.00
+delayed    reduce     SURVIVES       $31.00     $3470.00     $3000.00        $0.00
+delayed    finance    SURVIVES       $36.00     $4180.00     $4000.00     $3216.00
+
+FAIL MOMENT — ledger #14 at t=5: Aggregate marked equity $14099.00 is positive; Hyperliquid has $2500.00 against local maintenance $4000.00; shortfall $1500.00. External pending/pledged capital is not margin in time
+
+FEASIBLE ALTERNATIVES (cost delta vs cheapest successful on-time plan):
+  reduce: cost $31.00; delta $29.00; local margin buffer $470.00
+  finance: cost $36.00; delta $34.00; local margin buffer $180.00
+  reduce changes existing exposure; it keeps the proposed action unchanged.
+  finance pledges wallet + Polymarket settled lots; outstanding debt and maturity remain visible.
+
+NON-ATOMIC FAILURE — break the finance disbursement after collateral pledge:
+  #2 t=0 [COLLATERAL_PLEDGED] wallet-ready exclusively pledged to SYNTHETIC-QUOTE-001; unavailable for withdrawal or another plan step
+  #3 t=0 [COLLATERAL_PLEDGED] poly-ready exclusively pledged to SYNTHETIC-QUOTE-001; unavailable for withdrawal or another plan step
+  #7 t=1 [FINANCING_NOT_DELIVERED] Synthetic provider failed after collateral pledge. Loan principal not disbursed; liability remains zero; collateral stays pledged
+  #9 t=2 [ACTION_NOT_EXECUTED] Earlier funding step failed; dependent action cancelled. Completed steps remain recorded
+
+Survival covers this synthetic horizon only, not eventual loan repayment or liquidation execution.
+Inspect the full ledger: cargo run --offline -- replay --scenario delayed --plan wallet
