@@ -66,7 +66,7 @@ Loris already advertises consolidated positions, funding P&L, margin and equity 
 
 FalconX describes financing and portfolio netting for supported accounts within a prime relationship. Amplifi advertises Polymarket leverage and future cross-venue expansion. They reinforce the distinction between observing capital and being able to lend against it; they also could absorb this workflow. Neither establishes a HyprSonic integration or customer opportunity. [FalconX](https://www.falconx.io/newsroom/falconx-introduces-prime-brokerage-margin-financing-for-trading-on-hyperliquid), [Amplifi](https://amplifi.finance/).
 
-The initial selling hypothesis is a subscription per workspace for persistent monitoring, saved policies, history, and reconciliation. The public Rust engine can remain inspectable; managed operation must provide the recurring service worth paying for. No licensing change is made in this phase.
+The initial selling hypothesis is a subscription per workspace for persistent monitoring, saved policies, history, and reconciliation. The public Rust engine can remain inspectable; managed operation must provide the recurring service worth paying for. The repository is proprietary under [LICENSE](../LICENSE); use requires written permission subject to its stated exceptions.
 
 **Proposed price experiment: $250 per workspace per month**, including a small team. This is a test price, not researched willingness to pay. Twenty retained paying workspaces would be $5,000 monthly revenue before costs; there is no evidence yet that we can acquire or retain them. Hosting, feed/RPC costs, support, and adapter maintenance must fit that revenue. Builder fees and hypothetical lending commissions are not the model.
 

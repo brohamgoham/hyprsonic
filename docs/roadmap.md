@@ -171,7 +171,7 @@ If we do not repeatedly use it ourselves, identify why before expanding integrat
 
 This starts only after the internal gates and explicit owner approval. No outreach or billing implementation belongs to Phases 1–6.
 
-Review our decision log and whether a reachable buyer has the same recurring job. Recheck API/data permissions for the proposed commercial service, select an explicit software/asset licensing policy, and verify that operational costs and support can fit a subscription. These are release decisions, not claims that current repository code has a particular license or that existing API access grants resale rights.
+Review our decision log and whether a reachable buyer has the same recurring job. Recheck API/data permissions for the proposed commercial service, define customer terms under the repository's [proprietary license](../LICENSE), review third-party asset rights, and verify that operational costs and support can fit a subscription. These are release decisions; the repository license does not grant resale rights to upstream API data or third-party assets.
 
 If approved, run the small external paid-pilot experiment in [the product decision](product.md#commercial-gates). Its $250/workspace/month price is a hypothesis. Build only the onboarding, isolation and access controls needed for the chosen pilot deployment before sharing accounts or hosting other users' data. External failure reports can send work back to earlier phases.
 

@@ -27,6 +27,8 @@ Money can be settled in one account, supporting margin in another, or waiting on
 
 ## Connect real accounts
 
+Setup and demo instructions are for the owner and users with written permission. See [License](#license).
+
 The `observe` command reads Hyperliquid, Polymarket positions, and EVM wallet balances through ports and adapters. It records account mode, exact amounts, source evidence and missing coverage. Every report keeps funding eligibility **undetermined** until reconciliation and venue rules are implemented.
 
 ```sh
@@ -155,5 +157,13 @@ The suite includes the original 16 Phase 0 cases plus core, adapter and transpor
 | [Architecture](docs/architecture.md) | Domain model, ports, adapters, and evidence semantics |
 | [Own-wallet testing](docs/own-wallet-testing.md) | Internal trial sequence and decision journal |
 | [Demo reference](docs/demo.md) | Commands, fixture assumptions, and accounting details |
+
+## License
+
+**Proprietary. Copyright © 2026 Mo Maali (brohamgoham). All rights reserved.**
+
+The source is visible for inspection; HyprSonic is not open source. Running, modifying, redistributing, or offering it as a service requires prior written permission, subject to the exceptions in [LICENSE](LICENSE). GitHub's public-repository viewing and forking rights still apply. For permission or commercial licensing, use the contact details on [Mo's profile](https://github.com/brohamgoham).
+
+Third-party dependencies, characters, and trademarks retain their respective rights and licenses.
 
 <sub>Header artwork: generated for this project. Asset and generation notes live in <a href="assets/README.md">assets/</a>.</sub>
