@@ -1,6 +1,6 @@
 # HyprSonic: fund the next move
 
-Product decision, 2026-09-14. This defines the next implementation phases. Only the [Phase 0 synthetic demo](phase0-report.md) is implemented today; live connections, monitoring, and the workflow below are not shipped capabilities.
+Product decision, 2026-09-14. The [full delivery plan](roadmap.md) defines implementation phases and acceptance gates. Only the [Phase 0 synthetic demo](phase0-report.md) is implemented today; live connections, monitoring, and the workflow below are not shipped capabilities. The agreed release sequence is to test with our own wallets and tune through repeated use before considering an external paid pilot.
 
 ## The product
 
@@ -72,7 +72,7 @@ The initial selling hypothesis is a subscription per workspace for persistent mo
 
 ## Commercial gates
 
-No outreach occurs until Mo explicitly approves it. The following is a proposed future experiment, not permission to recruit:
+First complete the own-wallet trial and tuning gates in [Phases 5–6](roadmap.md#phase-5--test-with-our-own-wallets). No outreach occurs until Mo explicitly approves it after those gates. The following is a proposed future experiment, not permission to recruit:
 
 - Start with five users/teams that already make this type of cross-venue funding decision weekly. A test account created solely for our demo does not count.
 - Over four weeks, seek at least three that use the tool on real decisions in three separate weeks, identify a concrete decision improved or manual task removed, and then pay the test price to continue without requiring new credit.
@@ -83,7 +83,7 @@ These thresholds are chosen project gates, not statistically established market 
 
 ## Build order and latency
 
-Phase 0 is frozen as regression evidence. Next: real observations and coverage through the [ports and adapters design](architecture.md), then one end-to-end funding request with continued observation. A generic high-performance engine built independently of those two adapters would postpone the hardest semantic questions.
+Phase 0 is frozen as regression evidence. Next: real observations and coverage through the [ports and adapters design](architecture.md), then one end-to-end funding request with continued observation. The [delivery plan](roadmap.md) expands this into connection, reconciliation, planning, monitoring, own-wallet trial, tuning and commercial-decision gates. A generic high-performance engine built independently of those two adapters would postpone the hardest semantic questions.
 
 Fast invalidation matters: a stale plan can be misleading even if it originally calculated correctly. Measure upstream age, ingestion delay, recomputation, and time to display separately. Transfer and settlement duration are external dependencies. Local microsecond computation cannot remove them.
 

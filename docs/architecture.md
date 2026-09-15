@@ -1,6 +1,6 @@
 # Capital core and real-data boundaries
 
-Design decision, 2026-09-14. This is the implementation contract for the next phases, not a description of code already shipped. The existing `src/engine.rs` is a deterministic synthetic demo coupled to its fixture. It must not be made "live" by substituting API values for its arbitrary rules.
+Design decision, 2026-09-14. This is the implementation contract for the next phases, not a description of code already shipped. The [delivery plan](roadmap.md) governs detailed sequencing and gates, including own-wallet testing and tuning before selling. The existing `src/engine.rs` is a deterministic synthetic demo coupled to its fixture. It must not be made "live" by substituting API values for its arbitrary rules.
 
 ## One vertical slice
 
@@ -103,9 +103,16 @@ The ledger must retain facts, inferred classifications and hypothetical transiti
 
 ## Phases and acceptance
 
-1. **Real observations and core boundary.** Build the two-crate boundary with Hyperliquid and Polymarket adapters and the necessary wallet reads. CLI accepts user-provided account identities, reads actual endpoints, prints reconciled capital states and data gaps, and writes a local evidence journal. No hardcoded funded account and no zero substitution on errors. Demonstrate both successful reads and a failed/stale read. Record capture time and coverage. This phase is useful inspection, not yet the completed product.
-2. **One complete funding request.** On supported actual account configurations, compute alternatives from verified routes, model existing-position stress, show manual prerequisites and track real destination evidence. The UI has a request, alternatives and a timeline. At least one viable route and one justified blocked/unknown route must be demonstrated from actual account observations; hypothetical stresses remain labeled. This is the first usable product gate.
-3. **Persistent use.** Add continuous observation, relevant plan-change alerts, saved policies and reconciliation history. Prove reconnection and recovery. After Mo's outreach approval, apply the commercial gate in the product document before expanding venues or adding credit.
+The [full roadmap](roadmap.md) expands these architecture milestones into explicit delivery phases:
+
+| Architecture milestone | Delivery phases | Acceptance evidence |
+|---|---|---|
+| Real observations and core boundary | 1: connect; 2: reconcile | Actual endpoint reads, capital evidence, supported rules and explicit data gaps |
+| One complete funding request | 3: plan; 4: follow | Verified routes, scenario checks, usable workspace, live plan invalidation and receipt tracking |
+| Persistent internal use | 5: own-wallet trial; 6: tune | Reconciled real funding, repeated decisions, recovery and performance evidence |
+| External commercial decision | 7: gated pilot decision | Internal gates passed, owner approval and defined supported scope |
+
+Account captures and hypothetical stresses retain separate provenance. A live feed alone is not the funding workflow, and internal success does not establish willingness to pay.
 
 Each phase is a reviewed, tested commit pushed directly to `brohamgoham/hyprsonic` on `master`, per the owner's workflow. Account data, credentials and private research stay out of commits. Phase 0 remains available as a regression suite; no further fixture expansion is the primary deliverable.
 

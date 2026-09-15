@@ -42,7 +42,7 @@ The demo also breaks synthetic financing after the pledge. The ledger retains bo
 |---|---|
 | Three synthetic venue stubs and one proposed action | [Fixture](../fixtures/lane1.json), [model](../src/model.rs) |
 | Settled, withdrawable, unrealized, pending, pledged/reserved, delayed/blocked | Identified lots and distinct views in each ledger snapshot; overlapping totals explicitly documented |
-| Four plans, costs, dependencies, partial failures | [Replay engine](../src/engine.rs), [plan table](../README.md#four-funding-plans) |
+| Four plans, costs, dependencies, partial failures | [Replay engine](../src/engine.rs), [plan table](demo.md#four-funding-plans) |
 | Price move with delayed payout and feasible alternative | [Demo output](../artifacts/phase0-demo.log) |
 | Ordered event evidence with exact fixture | [JSON ledger](../artifacts/wallet-failure.json) |
 | Under-five-minute script | [Script](../scripts/demo.sh), [measured timing](../artifacts/demo-timing.json) |
@@ -66,6 +66,6 @@ Every price, fee, transfer duration, lending term, margin rule, and fill is synt
 
 Survival is limited to the selected horizon. Pending claims use fixture marks; liquidation execution, loan repayment at maturity, actual counterparty arrangements, and market-calibrated risk are outside Phase 0. The ledger continues diagnostically after a breach without simulating liquidation, and the result remains failed.
 
-This delivers the agreed technical demonstration, not validation that customers will pay. **No interviews or outreach until Mo greenlights the demo.** If users would not buy the planning/capital-state workflow without live credit, stop Lane 1 rather than treating technical completion as commercial proof. Cantina remains a separate lane.
+This delivers the agreed technical demonstration, not validation that customers will pay. **Own-wallet testing and tuning now precede any external pilot or selling**, under the [delivery plan](roadmap.md). Outreach remains gated on Mo's explicit approval. If users would not buy the planning/capital-state workflow without live credit, stop Lane 1 rather than treating technical completion as commercial proof. Cantina remains a separate lane.
 
 Published to [brohamgoham/hyprsonic](https://github.com/brohamgoham/hyprsonic/commit/e7e5586) on `master`. No PR was needed. The [product decision](product.md) and [architecture contract](architecture.md) define the real-data phases that follow; they do not change this report's synthetic scope.
