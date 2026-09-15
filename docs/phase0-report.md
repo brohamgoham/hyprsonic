@@ -1,6 +1,6 @@
 # HyprSonic Lane 1 Phase 0 — completion report
 
-The synthetic multi-venue capital-plan demo is implemented on local branch `lane1-phase0`. The complete demonstration ran in **3.706 seconds**, including compilation into a separate target directory with dependencies already cached. It made no runtime network requests and used no accounts or credentials. Timing is one local observation, not a performance guarantee.
+The synthetic multi-venue capital-plan demo was developed on `lane1-phase0` and subsequently committed and pushed to `master` as `e7e5586`, per the owner's request to publish completed phases directly. The complete demonstration ran in **3.706 seconds**, including compilation into a separate target directory with dependencies already cached. It made no runtime network requests and used no accounts or credentials. Timing is one local observation, not a performance guarantee.
 
 ## Run
 
@@ -68,4 +68,4 @@ Survival is limited to the selected horizon. Pending claims use fixture marks; l
 
 This delivers the agreed technical demonstration, not validation that customers will pay. **No interviews or outreach until Mo greenlights the demo.** If users would not buy the planning/capital-state workflow without live credit, stop Lane 1 rather than treating technical completion as commercial proof. Cantina remains a separate lane.
 
-Work remains local; no GitHub push or PR was made for Phase 0.
+Published to [brohamgoham/hyprsonic](https://github.com/brohamgoham/hyprsonic/commit/e7e5586) on `master`. No PR was needed. The [product decision](product.md) and [architecture contract](architecture.md) define the real-data phases that follow; they do not change this report's synthetic scope.

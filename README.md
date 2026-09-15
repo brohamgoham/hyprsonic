@@ -1,10 +1,16 @@
-# HyprSonic — Lane 1, Phase 0
+# HyprSonic — fund the next move
+
+**Product direction:** connect trading accounts and a wallet, request capital at a destination before a deadline, preserve account buffers, and track the funding plan as conditions change. Start with Hyperliquid and Polymarket predictions. Read the [product decision](docs/product.md) and [capital core / ports and adapters design](docs/architecture.md).
+
+**Implementation status:** Phase 0 below is shipped. Real-data adapters and the funding workspace are specified, not implemented yet. The next phase uses actual account observations; no live funding or execution is claimed.
+
+## Shipped: Lane 1, Phase 0
 
 **An offline, synthetic multi-venue capital-plan demo.** One question: can this proposed portfolio change be funded and maintained under the selected scenarios?
 
 The portfolio has positive aggregate marked equity, yet Hyperliquid cannot meet its local margin requirement when a Polymarket payout is delayed. The demo compares funding alternatives, including their costs and consequences. It is a product experiment, not a trading system or evidence of customer demand.
 
-This mission supersedes the old SUI feed reader and previous product briefs. The live SDKs and subscriptions have been removed. No terminal, book checker, session-cost tool, live execution, live credit, Kalshi adapter, outreach, or builder fees are included. Cantina is a separate lane.
+This demo supersedes the old SUI feed reader. The linked product decision governs subsequent phases. The old live SDKs and subscriptions have been removed. No terminal, book checker, session-cost tool, live execution, live credit, Kalshi adapter, outreach, or builder fees are included. Cantina is a separate lane.
 
 ## Run the demo
 
