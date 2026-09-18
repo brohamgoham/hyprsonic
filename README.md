@@ -131,7 +131,7 @@ Our first release target is a workflow we use with **our own wallets** before of
 
 Each phase has deliverables, dependencies, failure checks, and an acceptance gate in the **[full delivery plan](docs/roadmap.md)**. The [own-wallet runbook](docs/own-wallet-testing.md) defines how we'll gather real evidence without confusing replayed failures with live events.
 
-The proposed [Ratatui workspace](docs/tui-proposal.md) will make the existing capital view easier to inspect. Its interaction design and expanded usage guide are the next UI discussion; the CLI is the interface available today.
+The proposed [Ratatui workspace](docs/proposals/tui-proposal.md) will make the existing capital view easier to inspect. Its interaction design and expanded usage guide are the next UI discussion; the CLI is the interface available today.
 
 ## Built around a capital core
 

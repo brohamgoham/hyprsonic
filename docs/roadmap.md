@@ -86,7 +86,7 @@ Evidence: reconciliation report, rule version references, coverage matrix and an
 
 ## Phase 3 — answer one funding request
 
-The proposed [Phase 2T workspace](tui-proposal.md) can make account verification easier before or alongside this work. It does not replace funding-plan or monitoring acceptance gates.
+The proposed [Phase 2T workspace](proposals/tui-proposal.md) can make account verification easier before or alongside this work. It does not replace funding-plan or monitoring acceptance gates.
 
 **Deliverable:** request collateral at an existing Hyperliquid account by a deadline while preserving source reserves and a selected stress buffer.
 
