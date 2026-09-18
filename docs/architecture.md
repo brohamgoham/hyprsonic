@@ -1,6 +1,6 @@
 # Capital core and real-data boundaries
 
-Design decision, 2026-09-14. This is the target implementation contract. Phase 1 now implements the observation core, account/clock/evidence ports and real readers; planning, reconciliation and monitoring sections below remain future work. The [delivery plan](roadmap.md) governs detailed sequencing and gates, including own-wallet testing and tuning before selling. The existing `src/engine.rs` remains a deterministic synthetic demo coupled to its fixture. It must not be made "live" by substituting API values for its arbitrary rules.
+Design decision, 2026-09-14; implementation status updated 2026-09-18. Phase 1 implements the observation core, account/clock/evidence ports and real readers. Phase 2 adds [scoped reconciliation](capital.md), claim identities, local reserves, a pure constraint-model port and versioned standard-cross margin evaluation. Planning, continuous monitoring, complete obligations and receipt reconciliation remain future work. The [delivery plan](roadmap.md) governs sequencing and acceptance, including own-wallet testing before selling. The existing `src/engine.rs` remains a separate synthetic demo; no live data is fed into its arbitrary rules.
 
 ## One vertical slice
 

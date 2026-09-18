@@ -10,6 +10,7 @@ use std::{
 };
 
 pub struct SystemClock;
+pub const ADAPTER_VERSION: &str = "readers-2026-09-18-v2";
 impl Clock for SystemClock {
     fn now_ms(&self) -> u64 {
         SystemTime::now()
@@ -211,7 +212,7 @@ impl Context<'_> {
             .and_then(|v| v.get("time"))
             .and_then(Value::as_u64);
         // Never serialize the transport URL: RPC provider credentials may live in its path/query.
-        let id=self.store.append(&serde_json::to_vec_pretty(&json!({"schema_version":1,"adapter_version":"phase1-v1","alias":alias,
+        let id=self.store.append(&serde_json::to_vec_pretty(&json!({"schema_version":1,"adapter_version":ADAPTER_VERSION,"alias":alias,
             "endpoint":endpoint,"request_body":request.body,"query":request.query,"started_at_ms":started,
             "received_at_ms":received,"source_time_ms":source_time,"http_status":status,"error":error,"response":parsed
         })).map_err(|_|"evidence serialization failed")?).map_err(|_|"JOURNAL_WRITE_FAILED")?;

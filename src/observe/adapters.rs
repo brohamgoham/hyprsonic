@@ -4,7 +4,63 @@ use super::{
 };
 use capital_core::*;
 use serde_json::{Value, json};
-use std::collections::HashSet;
+use std::collections::{BTreeSet, HashSet};
+
+/// Phase 2 enriches observations; all network behavior stays outside the capital core.
+pub struct CapitalSource<'a>(pub Source<'a>);
+impl AccountSource for CapitalSource<'_> {
+    fn observe(&self) -> Result<AccountObservation, String> {
+        let source = &self.0;
+        if let Account::Evm {
+            alias,
+            address,
+            chain_id,
+            rpc_url_env,
+            tokens,
+        } = source.account
+        {
+            let mut o = AccountObservation::new(
+                alias.clone(),
+                "evm",
+                EvmAddress::parse(address).map_err(str::to_owned)?,
+            );
+            let Ok(url) = std::env::var(rpc_url_env) else {
+                o.issue(
+                    "MISSING_RPC_CONFIG",
+                    "evm",
+                    "Set the configured HYPRSONIC_* RPC URL environment variable.",
+                );
+                return Ok(o);
+            };
+            source.evm_at_tag(&mut o, *chain_id, &url, tokens, "finalized")?;
+            return Ok(o);
+        }
+        let mut o = source.observe()?;
+        match source.account {
+            Account::Hyperliquid { .. } => {
+                if let Some((v, e)) = source.hl_read(&mut o, "meta")? {
+                    match parse_margin_schedules(&v, &e) {
+                        Ok(schedules) => o.margin_schedules = schedules,
+                        Err(_) => o.issue(
+                            "SCHEMA_ERROR",
+                            "margin metadata",
+                            "Missing, conflicting or unsupported live margin tiers.",
+                        ),
+                    }
+                }
+                source.hl_activity(&mut o)?;
+                if let Some((v, _)) = source.hl_read(&mut o, "userAbstraction")?
+                    && (v.as_str() != o.account_mode.as_deref() || v.as_str().is_none())
+                {
+                    o.issue("ACCOUNT_MODE_CHANGED", "userAbstraction", "Account mode changed during collection; discard projections and recollect.");
+                }
+            }
+            Account::Polymarket { .. } => source.poly_lifecycle(&mut o)?,
+            Account::Evm { .. } => unreachable!(),
+        }
+        Ok(o)
+    }
+}
 
 pub struct Source<'a> {
     pub account: &'a Account,
@@ -52,6 +108,101 @@ fn parse_into(o: &mut AccountObservation, scope: &str, result: Result<Vec<Fact>,
     match result { Ok(f)=>o.facts.extend(f),Err(_)=>o.issue("SCHEMA_ERROR",scope,"Response has missing, conflicting or unsupported fields/precision; inspect private evidence.") }
 }
 impl Source<'_> {
+    fn hl_activity(&self, o: &mut AccountObservation) -> Result<(), String> {
+        let end = self.context.clock.now_ms();
+        let mut start = end.saturating_sub(86_400_000);
+        o.limitations.push("Non-funding ledger covers at most the last 24 hours / 10 pages. Historical events are never added to balances; destination receipts and complete liabilities are not established.".into());
+        let mut seen = HashSet::new();
+        for _ in 0..10 {
+            let Some((v, e)) = self.read(o, "hyperliquid/info/userNonFundingLedgerUpdates", Request {
+                url: "https://api.hyperliquid.xyz/info".into(),
+                body: Some(json!({"type":"userNonFundingLedgerUpdates","user":o.account.address.as_str(),"startTime":start,"endTime":end})), query: vec![],
+            })? else { return Ok(()); };
+            let Some(rows) = v.as_array() else {
+                o.issue("SCHEMA_ERROR", "ledger", "Expected activity array.");
+                return Ok(());
+            };
+            if rows.len() > 500 {
+                o.issue(
+                    "LEDGER_BOUND",
+                    "ledger",
+                    "Unexpected ledger page size; coverage is unknown.",
+                );
+                return Ok(());
+            }
+            let mut last = start;
+            for row in rows {
+                match parse_hl_activity(row, &e) {
+                    Ok(event) if event.at_ms >= start && event.at_ms <= end => {
+                        last = last.max(event.at_ms);
+                        if seen.insert(event.event_id.clone()) {
+                            o.activities.push(event);
+                        }
+                    }
+                    _ => {
+                        o.issue(
+                            "SCHEMA_ERROR",
+                            "ledger",
+                            "Invalid event identity or timestamp outside requested range.",
+                        );
+                        return Ok(());
+                    }
+                }
+            }
+            if rows.len() < 500 {
+                return Ok(());
+            }
+            if last <= start {
+                o.issue(
+                    "LEDGER_GAP",
+                    "ledger",
+                    "Pagination cannot advance without skipping same-timestamp events.",
+                );
+                return Ok(());
+            }
+            // Inclusive cursor lets duplicate boundary events be deduplicated without silently dropping events.
+            start = last;
+        }
+        o.issue(
+            "LEDGER_GAP",
+            "ledger",
+            "Ledger page bound reached; interval coverage is incomplete.",
+        );
+        Ok(())
+    }
+    fn poly_lifecycle(&self, o: &mut AccountObservation) -> Result<(), String> {
+        let conditions: BTreeSet<String> = o
+            .facts
+            .iter()
+            .filter(|f| f.field == "position.size")
+            .filter_map(|f| f.asset.as_ref()?.id.split(':').next().map(str::to_owned))
+            .collect();
+        if conditions.len() > 500 {
+            o.issue("LIFECYCLE_LIMIT", "markets", "More than 500 conditions; lifecycle enrichment is bounded and remaining conditions stay unknown.");
+        }
+        let conditions: Vec<_> = conditions.into_iter().take(500).collect();
+        for batch in conditions.chunks(25) {
+            let mut query: Vec<_> = batch
+                .iter()
+                .map(|id| ("condition_ids".into(), id.clone()))
+                .collect();
+            query.push(("limit".into(), "100".into()));
+            let Some((v, e)) = self.read(
+                o,
+                "polymarket/gamma/markets",
+                Request {
+                    url: "https://gamma-api.polymarket.com/markets".into(),
+                    body: None,
+                    query,
+                },
+            )?
+            else {
+                continue;
+            };
+            parse_into(o, "market lifecycle", parse_market_lifecycle(&v, batch, &e));
+        }
+        Ok(())
+    }
     fn read(
         &self,
         o: &mut AccountObservation,
@@ -153,7 +304,7 @@ impl Source<'_> {
         o.limitations.extend([
             "Positions API v1 observation only: no authenticated open orders, spend permissions, collateral cash or private pledges.".into(),
             "Supply the actual holding/profile wallet; an empty list does not establish account ownership or zero cash.".into(),
-            "Redeemable is an API hint, not a confirmed redemption or guaranteed payout; market lifecycle reconciliation is pending.".into(),
+            "Redeemable is an API hint, not a confirmed redemption or guaranteed payout; capital enriches lifecycle separately with offchain market evidence.".into(),
             "Offset pages are not an atomic snapshot; concurrent account changes can affect coverage. Upstream snapshot age is unknown.".into(),
         ]);
         let mut seen = HashSet::new();
@@ -268,6 +419,16 @@ impl Source<'_> {
         url: &str,
         tokens: &[Token],
     ) -> Result<(), String> {
+        self.evm_at_tag(o, chain, url, tokens, "latest")
+    }
+    fn evm_at_tag(
+        &self,
+        o: &mut AccountObservation,
+        chain: u64,
+        url: &str,
+        tokens: &[Token],
+        tag: &str,
+    ) -> Result<(), String> {
         let valid = reqwest::Url::parse(url).is_ok_and(|u| {
             u.scheme() == "https"
                 && u.host_str().is_some()
@@ -283,7 +444,7 @@ impl Source<'_> {
             );
             return Ok(());
         }
-        o.limitations.push("Pinned-block balances are not withdrawal eligibility; allowances, gas cost, external obligations and finality are not reconciled.".into());
+        o.limitations.push("Pinned-block balances alone are not withdrawal eligibility; allowances, gas cost and external obligations are not reconciled. The requested block/finality policy is recorded explicitly.".into());
         let Some((v, _)) = self.rpc(o, url, "eth_chainId", json!([]))? else {
             return Ok(());
         };
@@ -295,8 +456,7 @@ impl Source<'_> {
             );
             return Ok(());
         }
-        let Some((block, _)) =
-            self.rpc(o, url, "eth_getBlockByNumber", json!(["latest", false]))?
+        let Some((block, _)) = self.rpc(o, url, "eth_getBlockByNumber", json!([tag, false]))?
         else {
             return Ok(());
         };
@@ -326,6 +486,15 @@ impl Source<'_> {
         };
         let address = o.account.address.as_str().to_owned();
         let network = format!("evm:{chain}");
+        // Keep the finality policy tied to the actual block-read evidence.
+        let mut block_evidence = o.evidence.last().ok_or("missing block evidence")?.clone();
+        pin(o, &mut block_evidence, &hash, time);
+        o.facts.push(fact(
+            "wallet.block_policy",
+            None,
+            FactValue::Text(tag.into()),
+            &block_evidence,
+        ));
         if let Some((v, mut e)) = self.rpc(o, url, "eth_getBalance", json!([address, number]))? {
             pin(o, &mut e, &hash, time);
             parse_into(
@@ -481,9 +650,30 @@ pub fn parse_hl_perps(v: &Value, e: &EvidenceRef) -> Result<Vec<Fact>, String> {
             e,
         ));
     }
+    let mut coins = HashSet::new();
     for row in list(v, "assetPositions")? {
         let p = row.get("position").ok_or("missing position")?;
         let coin = text(p, "coin")?;
+        if coin.is_empty() || !coins.insert(coin) {
+            return Err("duplicate or missing position identity".into());
+        }
+        let leverage = p.get("leverage").ok_or("missing position leverage")?;
+        let mode = text(leverage, "type")?;
+        if !matches!(mode, "cross" | "isolated") {
+            return Err("unknown position margin mode".into());
+        }
+        facts.push(fact(
+            "position.margin_mode",
+            reported_asset("hyperliquid-perp", coin),
+            FactValue::Text(mode.into()),
+            e,
+        ));
+        facts.push(fact(
+            "position.leverage",
+            reported_asset("hyperliquid-perp", coin),
+            FactValue::Amount(numeric(leverage, "value")?),
+            e,
+        ));
         for key in ["szi", "unrealizedPnl", "marginUsed", "positionValue"] {
             let asset = if key == "szi" {
                 reported_asset("hyperliquid-perp", coin)
@@ -499,6 +689,147 @@ pub fn parse_hl_perps(v: &Value, e: &EvidenceRef) -> Result<Vec<Fact>, String> {
         }
     }
     Ok(facts)
+}
+
+pub fn parse_hl_activity(
+    row: &Value,
+    e: &EvidenceRef,
+) -> Result<capital::ObservedActivity, String> {
+    let at_ms = row
+        .get("time")
+        .and_then(Value::as_u64)
+        .ok_or("missing ledger timestamp")?;
+    let hash = text(row, "hash")?;
+    if hash.len() != 66
+        || !hash.starts_with("0x")
+        || !hash[2..].bytes().all(|b| b.is_ascii_hexdigit())
+    {
+        return Err("invalid ledger hash".into());
+    }
+    let delta = row
+        .get("delta")
+        .filter(|v| v.is_object())
+        .ok_or("missing ledger delta")?;
+    let kind = text(delta, "type")?;
+    if kind.is_empty() || kind.len() > 64 || !kind.bytes().all(|b| b.is_ascii_alphanumeric()) {
+        return Err("invalid ledger type".into());
+    }
+    // Same transaction may carry multiple deltas. Canonical object serialization keeps them distinct.
+    let identity = serde_json::to_string(delta).map_err(|_| "invalid ledger payload")?;
+    Ok(capital::ObservedActivity {
+        event_id: format!("{}:{at_ms}:{identity}", hash.to_ascii_lowercase()),
+        at_ms,
+        kind: kind.into(),
+        evidence_id: e.id.clone(),
+    })
+}
+
+pub fn parse_margin_schedules(
+    v: &Value,
+    e: &EvidenceRef,
+) -> Result<Vec<margin::MarginSchedule>, String> {
+    let tables = list(v, "marginTables")?;
+    let mut ids = HashSet::new();
+    let mut parsed = std::collections::BTreeMap::new();
+    for table in tables {
+        let pair = table
+            .as_array()
+            .filter(|p| p.len() == 2)
+            .ok_or("invalid margin table")?;
+        let id = pair[0].as_u64().ok_or("invalid margin table id")?;
+        if !ids.insert(id) {
+            return Err("duplicate margin table".into());
+        }
+        let mut tiers = vec![];
+        for tier in list(&pair[1], "marginTiers")? {
+            let leverage = tier["maxLeverage"]
+                .as_u64()
+                .filter(|n| *n > 0 && *n <= 1000)
+                .ok_or("invalid max leverage")?;
+            tiers.push(margin::MarginTier {
+                lower_bound: numeric(tier, "lowerBound")?,
+                max_leverage: leverage as u32,
+            });
+        }
+        margin::maintenance_for(&Decimal::zero(), &tiers).map_err(str::to_owned)?;
+        parsed.insert(id, tiers);
+    }
+    let mut out = vec![];
+    let mut coins = HashSet::new();
+    for instrument in list(v, "universe")? {
+        let coin = text(instrument, "name")?;
+        if !coins.insert(coin) {
+            return Err("duplicate instrument".into());
+        }
+        let id = instrument
+            .get("marginTableId")
+            .and_then(Value::as_u64)
+            .or_else(|| instrument.get("maxLeverage").and_then(Value::as_u64))
+            .ok_or("missing margin table id")?;
+        let tiers = if id > 0 && id < 50 {
+            vec![margin::MarginTier {
+                lower_bound: Decimal::zero(),
+                max_leverage: id as u32,
+            }]
+        } else {
+            parsed
+                .get(&id)
+                .cloned()
+                .ok_or("missing explicit margin table")?
+        };
+        out.push(margin::MarginSchedule {
+            coin: coin.into(),
+            tiers,
+            evidence_id: e.id.clone(),
+        });
+    }
+    Ok(out)
+}
+
+pub fn parse_market_lifecycle(
+    v: &Value,
+    requested: &[String],
+    e: &EvidenceRef,
+) -> Result<Vec<Fact>, String> {
+    let rows = v.as_array().ok_or("expected markets array")?;
+    let mut seen = BTreeSet::new();
+    let mut out = vec![];
+    for row in rows {
+        let id = text(row, "conditionId")?.to_ascii_lowercase();
+        if !requested.contains(&id) || !seen.insert(id.clone()) {
+            return Err("unexpected or duplicate market identity".into());
+        }
+        let closed = row
+            .get("closed")
+            .and_then(Value::as_bool)
+            .ok_or("missing market closed flag")?;
+        // Gamma status is offchain lifecycle evidence, never an onchain payout receipt.
+        let status = row
+            .get("umaResolutionStatus")
+            .and_then(Value::as_str)
+            .unwrap_or("unreported");
+        let state = if status == "resolved" {
+            "resolved"
+        } else if status == "disputed" {
+            "disputed"
+        } else if status == "proposed" {
+            "proposed"
+        } else if closed {
+            "closed_resolution_unverified"
+        } else {
+            "open_or_unresolved"
+        };
+        out.push(fact(
+            "market.lifecycle",
+            reported_asset("polymarket-condition", &id),
+            FactValue::Text(state.into()),
+            e,
+        ));
+    }
+    if seen.len() != requested.len() {
+        return Err("market response omitted requested conditions".into());
+    }
+    Ok(out)
 }
 pub fn parse_hl_spot(v: &Value, e: &EvidenceRef) -> Result<Vec<Fact>, String> {
     let mut out = vec![];
@@ -638,6 +969,18 @@ mod wallet_tests {
             let result = match method {
                 "eth_chainId" => json!(if self.fault == "chain" { "0x1" } else { "0x89" }),
                 "eth_getBlockByNumber" => {
+                    if self.fault == "finalized" {
+                        assert_ne!(body["params"][0], "latest");
+                    }
+                    if self.fault == "no_finality" && body["params"][0] == "finalized" {
+                        return Ok(Reply {
+                            status: 200,
+                            body: serde_json::to_vec(
+                                &json!({"jsonrpc":"2.0","id":1,"result":null}),
+                            )
+                            .unwrap(),
+                        });
+                    }
                     json!({"number":"0x10","hash":format!("0x{}",if self.fault=="reorg"&&body["params"][0]!="latest"{"b".repeat(64)}else{"a".repeat(64)}),"timestamp":"0x1"})
                 }
                 "eth_getBalance" => {
@@ -673,6 +1016,9 @@ mod wallet_tests {
         }
     }
     fn observe(fault: &'static str) -> AccountObservation {
+        observe_at_tag(fault, "latest")
+    }
+    fn observe_at_tag(fault: &'static str, tag: &str) -> AccountObservation {
         let rpc = Rpc {
             fault,
             calls: Mutex::new(vec![]),
@@ -697,7 +1043,7 @@ mod wallet_tests {
         let mut o =
             AccountObservation::new("wallet".into(), "evm", EvmAddress::parse(ADDRESS).unwrap());
         source
-            .evm_at_url(
+            .evm_at_tag(
                 &mut o,
                 137,
                 "https://rpc.example.invalid/secret",
@@ -706,17 +1052,30 @@ mod wallet_tests {
                     symbol: "TEST".into(),
                     decimals: 6,
                 }],
+                tag,
             )
             .unwrap();
         o.finish(1000, 100);
         o
     }
     #[test]
+    fn finalized_wallet_reads_never_fall_back_to_latest() {
+        let o = observe_at_tag("finalized", "finalized");
+        assert!(matches!(o.read_status, ReadStatus::Complete));
+        assert!(o.facts.iter().any(|f| f.field == "wallet.block_policy"
+            && matches!(&f.value, FactValue::Text(s) if s == "finalized")));
+        let o = observe_at_tag("no_finality", "finalized");
+        assert!(matches!(o.read_status, ReadStatus::Partial));
+        assert!(!o.facts.iter().any(|f| f.field.contains("balance")));
+    }
+    #[test]
     fn wallet_reads_use_pinned_block_and_validated_precision() {
         let o = observe("");
         assert!(matches!(o.read_status, ReadStatus::Complete));
-        assert_eq!(o.facts.len(), 2);
-        assert!(matches!(&o.facts[1].value,FactValue::Amount(d) if d.to_string()=="1.000000"));
+        assert_eq!(o.facts.len(), 3);
+        assert!(
+            matches!(&o.facts.iter().find(|f| f.field == "wallet.token_balance.TEST").unwrap().value,FactValue::Amount(d) if d.to_string()=="1.000000")
+        );
         for f in &o.facts {
             let e = o.evidence.iter().find(|e| e.id == f.evidence_id).unwrap();
             assert!(e.block.is_some());
@@ -743,7 +1102,7 @@ mod wallet_tests {
     #[test]
     fn a_reorg_invalidates_previously_successful_balance_reads() {
         let o = observe("reorg");
-        assert_eq!(o.facts.len(), 2);
+        assert_eq!(o.facts.len(), 3);
         assert!(matches!(o.read_status, ReadStatus::Partial));
         assert!(o.issues.iter().any(|i| i.code == "BLOCK_CHANGED"));
     }

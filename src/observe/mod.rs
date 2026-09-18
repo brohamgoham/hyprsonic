@@ -51,7 +51,7 @@ pub fn run(args: &[String]) -> Result<u8, String> {
     let degraded = observations
         .iter()
         .any(|o| !matches!(o.read_status, ReadStatus::Complete));
-    let report = json!({"schema_version":1,"mode":"live_read_only","adapter_version":"phase1-v1","started_at_ms":started,
+    let report = json!({"schema_version":1,"mode":"live_read_only","adapter_version":io::ADAPTER_VERSION,"started_at_ms":started,
         "completed_at_ms":completed,"funding_verdict":"UNDETERMINED","capital_reconciled":false,
         "scope":"Configured accounts and endpoints only. No signing, execution or funding eligibility.","accounts":observations});
     journal.report(&report)?;

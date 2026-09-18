@@ -1,5 +1,7 @@
 # Phase 1 — real observations and the core boundary
 
+Historical Phase 1 implementation report. For the current capital command, validation count and remaining acceptance work, see [Phase 2](phase2-report.md).
+
 **Implementation delivered; own-account acceptance pending.** This increment adds the `observe` command, a two-crate boundary and real read-only adapters. The owner has not supplied an own-account configuration yet. Public reference reads validate connectivity and response handling, not the owner's wallets or a completed funding workflow.
 
 ## Run

@@ -1,6 +1,8 @@
 //! Pure observation model and ports. No network, clock reads, files, or venue SDKs.
 use serde::Serialize;
 use std::fmt;
+pub mod capital;
+pub mod margin;
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize)]
 #[serde(transparent)]
@@ -66,6 +68,55 @@ impl Decimal {
     pub fn scale(&self) -> u8 {
         self.scale
     }
+    pub fn zero() -> Self {
+        Self { atoms: 0, scale: 0 }
+    }
+    fn aligned(&self, other: &Self) -> Result<(i128, i128, u8), &'static str> {
+        let scale = self.scale.max(other.scale);
+        let a = self
+            .atoms
+            .checked_mul(10i128.pow((scale - self.scale) as u32))
+            .ok_or("decimal overflow")?;
+        let b = other
+            .atoms
+            .checked_mul(10i128.pow((scale - other.scale) as u32))
+            .ok_or("decimal overflow")?;
+        Ok((a, b, scale))
+    }
+    pub fn checked_add(&self, other: &Self) -> Result<Self, &'static str> {
+        let (a, b, s) = self.aligned(other)?;
+        Self::from_atoms(a.checked_add(b).ok_or("decimal overflow")?, s)
+    }
+    pub fn checked_sub(&self, other: &Self) -> Result<Self, &'static str> {
+        let (a, b, s) = self.aligned(other)?;
+        Self::from_atoms(a.checked_sub(b).ok_or("decimal overflow")?, s)
+    }
+    pub fn compare(&self, other: &Self) -> Result<std::cmp::Ordering, &'static str> {
+        let (a, b, _) = self.aligned(other)?;
+        Ok(a.cmp(&b))
+    }
+    /// Nonnegative division rounded UP to a declared output precision.
+    pub fn divide_ceil(&self, divisor: u32, scale: u8) -> Result<Self, &'static str> {
+        if self.atoms < 0 || divisor == 0 || scale > 38 {
+            return Err("invalid rounded division");
+        }
+        let (n, d) = if scale >= self.scale {
+            (
+                self.atoms
+                    .checked_mul(10i128.pow((scale - self.scale) as u32))
+                    .ok_or("decimal overflow")?,
+                divisor as i128,
+            )
+        } else {
+            (
+                self.atoms,
+                (divisor as i128)
+                    .checked_mul(10i128.pow((self.scale - scale) as u32))
+                    .ok_or("decimal overflow")?,
+            )
+        };
+        Self::from_atoms(n / d + i128::from(n % d != 0), scale)
+    }
 }
 impl fmt::Display for Decimal {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
@@ -81,7 +132,7 @@ impl fmt::Display for Decimal {
     }
 }
 
-#[derive(Clone, Debug, Serialize)]
+#[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord, Serialize)]
 pub struct AssetId {
     pub network: String,
     pub id: String,
@@ -143,6 +194,8 @@ pub struct AccountObservation {
     pub evidence: Vec<EvidenceRef>,
     pub issues: Vec<Issue>,
     pub limitations: Vec<String>,
+    pub margin_schedules: Vec<margin::MarginSchedule>,
+    pub activities: Vec<capital::ObservedActivity>,
 }
 impl AccountObservation {
     pub fn new(alias: String, venue: &str, address: EvmAddress) -> Self {
@@ -159,10 +212,11 @@ impl AccountObservation {
             evidence: vec![],
             issues: vec![],
             limitations: vec![
-                "Observation only: capital reconciliation and funding rules are not implemented."
-                    .into(),
+                "Raw observations alone do not establish funding eligibility.".into(),
                 "Public data cannot establish account control or all private obligations.".into(),
             ],
+            margin_schedules: vec![],
+            activities: vec![],
         }
     }
     pub fn issue(&mut self, code: &str, scope: &str, detail: &str) {

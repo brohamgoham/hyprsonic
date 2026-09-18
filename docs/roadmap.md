@@ -2,7 +2,7 @@
 
 **Build it. Use it with our own wallets. Tune it before selling it.**
 
-This is the execution plan agreed on 2026-09-14. It expands the earlier architecture milestones and governs sequencing. The [product](product.md) and [architecture](architecture.md) documents define the scope and technical boundaries. Phase 0 is complete. Phase 1 readers/core are implemented and public-reference checks pass; its own-account acceptance gate remains pending. Later phases remain planned.
+This is the execution plan agreed on 2026-09-14. It expands the earlier architecture milestones and governs sequencing. The [product](product.md) and [architecture](architecture.md) documents define the scope and technical boundaries. Phase 0 is complete. Phase 1 readers/core and a scoped Phase 2 reconciliation are implemented with public-reference live evidence. Own-account acceptance remains pending; development of Phase 2 does not waive the Phase 1 gate. Phases 3–7 remain planned.
 
 ## Finish line
 
@@ -20,7 +20,8 @@ This plan authorizes software development and read-only observation of accounts 
 |---|---|---|---|
 | 0 — Capital model demonstration | Replay the aggregate-equity/local-margin failure | — | **Shipped** |
 | 1 — Connect real accounts | Inspect actual responses, account identities and data coverage | 0 | Implemented; own-account acceptance pending |
-| 2 — Reconcile capital | Trust a scoped view of capital states and account constraints | 1 | Planned |
+| 2 — Reconcile capital | Inspect capital states and account constraints with evidence | 1 | Scoped implementation; own-account/rule acceptance pending |
+| 2T — Capital inspection TUI | Navigate holdings, blockers and evidence using Ratatui | 2 implementation | Proposed; not implemented |
 | 3 — Plan one funding request | Compare supported ways to fund an existing HL account | 2 | Planned |
 | 4 — Follow the plan | Monitor decisions and confirmations in a minimal workspace | 3 | Planned |
 | 5 — Own-wallet trial | Complete and reconcile the workflow with our accounts | 4 | Planned |
@@ -61,6 +62,8 @@ Evidence: phase report, dependency-boundary check, sanitized adapter tests and a
 
 ## Phase 2 — reconcile capital and constraints
 
+Current implementation: [`capital` and `explain`](capital.md), with [validation and remaining gates](phase2-report.md). The standard-cross HL model is deliberately limited; the owner's actual mode has not been selected or validated. Authenticated commitments, onchain prediction redemption and destination receipts remain coverage gaps, not assumed zero balances or completed events.
+
 **Deliverable:** a live, scoped capital view backed by observations rather than hand-entered balances.
 
 Work:
@@ -82,6 +85,8 @@ Exit gate:
 Evidence: reconciliation report, rule version references, coverage matrix and an explain command/output. A balance screen alone completes this phase, not the product.
 
 ## Phase 3 — answer one funding request
+
+The proposed [Phase 2T workspace](tui-proposal.md) can make account verification easier before or alongside this work. It does not replace funding-plan or monitoring acceptance gates.
 
 **Deliverable:** request collateral at an existing Hyperliquid account by a deadline while preserving source reserves and a selected stress buffer.
 

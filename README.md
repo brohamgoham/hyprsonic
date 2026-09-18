@@ -8,7 +8,8 @@
 </p>
 
 <p align="center">
-  <a href="docs/observations.md">Observe accounts</a> ·
+  <a href="docs/capital.md">Inspect capital</a> ·
+  <a href="docs/observations.md">Connect accounts</a> ·
   <a href="#try-the-demo">Try the demo</a> ·
   <a href="docs/roadmap.md">Roadmap</a> ·
   <a href="docs/product.md">Product</a> ·
@@ -23,7 +24,19 @@ Money can be settled in one account, supporting margin in another, or waiting on
 
 **HyprSonic is being built to turn those constraints into a funding plan.** Connect Hyperliquid, Polymarket predictions, and a wallet. Specify where you need capital, by when, and which reserves to preserve. Compare the available routes and follow their dependencies through to destination credit.
 
-> **Development status:** real read-only account observations and the synthetic CLI demo are implemented. Public-reference live checks pass; the own-account acceptance check is pending configuration. Capital reconciliation, funding plans from live data, and the workspace are next. No signing or money movement is implemented.
+> **Development status:** live account readers and scoped capital reconciliation are implemented. Capital states, local reserves, margin checks and their evidence are available in the CLI. Public-reference reads are verified; own-account acceptance is pending configuration. Funding plans and the workspace are next. No signing or money movement is implemented.
+
+## Inspect real capital
+
+Connect your accounts, then inspect settled holdings, reported withdrawal constraints, unrealized PnL, pending proceeds, reserves and blocked capital. Unsupported or missing evidence stays **UNKNOWN**.
+
+```sh
+cargo run --locked -- capital --config .local/accounts.json
+```
+
+The command reads live margin tables, market lifecycle data, account history and finalized wallet balances. It keeps overlapping views separate and reports local margin failures, conflicting reservations and stale evidence. Every projection has an explanation in the private report. **[Setup, supported accounts and explain command →](docs/capital.md)**
+
+Funding verdicts remain **UNDETERMINED** until a supported route and destination credit can be evaluated. This phase establishes the capital view; it does not yet answer a deadline-bound funding request.
 
 ## Connect real accounts
 
@@ -108,7 +121,8 @@ Our first release target is a workflow we use with **our own wallets** before of
 |---|---|---|
 | **0** | Synthetic capital-plan proof and failure ledger | Shipped |
 | **1** | Real account connections and core boundaries | Implemented; own-account check pending |
-| **2** | Reconciled capital states and supported account rules | Planned |
+| **2** | Reconciled capital states and supported account rules | Scoped implementation; own-account acceptance pending |
+| **2T** | Ratatui workspace for accounts, capital and evidence | Proposed; not implemented |
 | **3** | One complete funding request with verified routes | Planned |
 | **4** | Continuous observation and a minimal workspace | Planned |
 | **5** | Own-wallet trial with actual destination reconciliation | Planned |
@@ -117,9 +131,11 @@ Our first release target is a workflow we use with **our own wallets** before of
 
 Each phase has deliverables, dependencies, failure checks, and an acceptance gate in the **[full delivery plan](docs/roadmap.md)**. The [own-wallet runbook](docs/own-wallet-testing.md) defines how we'll gather real evidence without confusing replayed failures with live events.
 
+The proposed [Ratatui workspace](docs/tui-proposal.md) will make the existing capital view easier to inspect. Its interaction design and expanded usage guide are the next UI discussion; the CLI is the interface available today.
+
 ## Built around a capital core
 
-The workspace now has a pure Rust observation core and an application with account-reader, clock and evidence-store ports. Market feeds, route quotes, receipt tracking and planning will extend that boundary in subsequent phases.
+The workspace has a pure Rust observation/reconciliation core, a versioned constraint-model contract, and an application with account-reader, clock and evidence-store ports. Route quotes, receipt tracking and planning will extend that boundary in subsequent phases.
 
 ```text
                     CLI / workspace
@@ -133,7 +149,7 @@ The workspace now has a pure Rust observation core and an application with accou
        Hyperliquid · Polymarket · wallets · routes
 ```
 
-The diagram shows the full target workflow. **Observe and its core/adapter boundary are implemented**; Plan, Watch and the workspace UI remain planned. The Phase 0 engine stays a separate synthetic model, with no live observations fed into its arbitrary rules.
+The diagram shows the full target workflow. **Observe, scoped capital reconciliation and saved-report explanations are implemented**; Plan, Watch and the workspace UI remain planned. The Phase 0 engine stays a separate synthetic model, with no live observations fed into its arbitrary rules.
 
 Fast recomputation and fresh evidence are separate requirements. We'll measure upstream age, processing delay, decision updates, and display latency independently. [Read the architecture contract →](docs/architecture.md)
 
@@ -147,12 +163,13 @@ cargo clippy --workspace --offline --locked --all-targets -- -D warnings
 cargo fmt --all -- --check
 ```
 
-The suite includes the original 16 Phase 0 cases plus core, adapter and transport checks: exact decimals, pagination gaps, identity/mode errors, token validation, stale data, reorgs, evidence privacy and HTTP limits. Tests use deterministic inputs and local loopback servers; external network checks are opt-in through `observe`. See [current coverage](docs/observations.md#coverage).
+The suite includes the original 16 Phase 0 cases plus core, adapter and transport checks: exact decimals, tiered margin, conflicting reserves, duplicate events, partial pages, account modes, finalized blocks, stale data, reorgs and evidence privacy. Tests use controlled inputs and local loopback servers; live validation uses `observe` and `capital`. See [Phase 2 validation](docs/phase2-report.md) and [reader coverage](docs/observations.md#coverage).
 
 | Read next | Purpose |
 |---|---|
 | [Product decision](docs/product.md) | The user, recurring job, and commercial hypothesis |
 | [Observe real accounts](docs/observations.md) | Configuration, endpoint coverage, private evidence, and exit codes |
+| [Reconcile real capital](docs/capital.md) | Six capital views, local reserves, rule coverage, and evidence explanations |
 | [Delivery plan](docs/roadmap.md) | Full phases and completion gates |
 | [Architecture](docs/architecture.md) | Domain model, ports, adapters, and evidence semantics |
 | [Own-wallet testing](docs/own-wallet-testing.md) | Internal trial sequence and decision journal |

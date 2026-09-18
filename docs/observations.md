@@ -62,13 +62,15 @@ It exits `3`; it does not substitute a zero wallet balance. The alias above iden
 
 ## Coverage
 
+This table describes the raw `observe` command. The newer [`capital` command](capital.md) adds margin metadata, bounded account history, market lifecycle enrichment, finalized wallet reads and scoped reconciliation.
+
 | Reader | Implemented | Explicit limits |
 |---|---|---|
 | Hyperliquid | User role, abstraction mode, default-DEX perpetual account state, spot state, open-order payload/count | No HIP-3/subaccount enumeration, vault-deposit eligibility, margin-rule evaluation, marks stream or transfer history; default DEX and spot values must not be summed |
 | Polymarket predictions | Paginated positions, exact consumed decimal values, position identity, reported valuation/P&L and redemption hints | No cash/commitment inference, authenticated orders, resolution confirmation, CTF redemption verification, v2 integration or portfolio reconciliation |
 | EVM wallet | Chain verification, block-pinned native/ERC-20 balances, code/decimals checks, post-read block-hash recheck | No finality guarantee, allowances, gas-cost estimate, transfer tracking or source/destination reconciliation |
 
-These readers may describe the same underlying holding through different APIs. There is no combined equity number. Polymarket `redeemable` is a hint, not a credited payout. HL fields are venue-reported observations; mode-specific economic interpretation belongs to Phase 2.
+These readers may describe the same underlying holding through different APIs. There is no combined equity number. Polymarket `redeemable` is a hint, not a credited payout. HL fields are venue-reported observations; supported mode-specific interpretation is available through Phase 2's `capital` command.
 
 The command observes only explicitly configured accounts. It cannot prove the absence of hidden off-chain obligations or account-specific permission restrictions. Known coverage gaps are reported separately from failures of the requested reads.
 
