@@ -55,7 +55,7 @@ cargo run --locked -- observe --config .local/accounts.json
 
 **[Account setup, RPC configuration and coverage →](docs/observations.md)**
 
-The command writes private evidence under `.local/observations/`. A failed read exits `3` and reports the gap; it does not become a zero balance. Use `--json` for all observations. The [Phase 1 report](docs/phase1-report.md) separates live-reference evidence from the pending own-wallet check.
+The command writes private evidence under `.local/observations/`. A failed read exits `3` and reports the gap; it does not become a zero balance. Use `--json` for all observations. The [Phase 1 report](docs/phases/done/phase1-report.md) separates live-reference evidence from the pending own-wallet check.
 
 ## One request. The whole funding path.
 
@@ -111,7 +111,7 @@ Under that same synthetic delay and price move, wallet and withdrawal plans fail
 
 The script saves text and JSON evidence. An infeasible standalone replay exits **2**; the demo script succeeds after verifying that failure. The recorded run took **3.706 seconds**, including compilation with cached dependencies; it is not a live-system latency benchmark.
 
-[Demo reference](docs/demo.md) · [Recorded output](artifacts/phase0-demo.log) · [Failure ledger](artifacts/wallet-failure.log) · [Phase 0 report](docs/phase0-report.md)
+[Demo reference](docs/demo.md) · [Recorded output](artifacts/phase0-demo.log) · [Failure ledger](artifacts/wallet-failure.log) · [Phase 0 report](docs/phases/done/phase0-report.md)
 
 ## Build → use → tune
 
@@ -163,7 +163,7 @@ cargo clippy --workspace --offline --locked --all-targets -- -D warnings
 cargo fmt --all -- --check
 ```
 
-The suite includes the original 16 Phase 0 cases plus core, adapter and transport checks: exact decimals, tiered margin, conflicting reserves, duplicate events, partial pages, account modes, finalized blocks, stale data, reorgs and evidence privacy. Tests use controlled inputs and local loopback servers; live validation uses `observe` and `capital`. See [Phase 2 validation](docs/phase2-report.md) and [reader coverage](docs/observations.md#coverage).
+The suite includes the original 16 Phase 0 cases plus core, adapter and transport checks: exact decimals, tiered margin, conflicting reserves, duplicate events, partial pages, account modes, finalized blocks, stale data, reorgs and evidence privacy. Tests use controlled inputs and local loopback servers; live validation uses `observe` and `capital`. See [Phase 2 validation](docs/phases/phase2-report.md) and [reader coverage](docs/observations.md#coverage).
 
 | Read next | Purpose |
 |---|---|

@@ -14,7 +14,7 @@ cargo fetch --locked
 bash scripts/demo.sh
 ```
 
-The script builds the small CLI, prints the comparison and failure, and saves the full ledger. It checks that the infeasible wallet replay exits **2**. Once dependencies are cached, compilation and replay should fit comfortably within five minutes; the script prints elapsed time. See the measured run in [the Phase 0 report](phase0-report.md).
+The script builds the small CLI, prints the comparison and failure, and saves the full ledger. It checks that the infeasible wallet replay exits **2**. Once dependencies are cached, compilation and replay should fit comfortably within five minutes; the script prints elapsed time. See the measured run in [the Phase 0 report](phases/done/phase0-report.md).
 
 Read [the demo output](../artifacts/phase0-demo.log), [the full failure log](../artifacts/wallet-failure.log), or [the JSON event ledger](../artifacts/wallet-failure.json).
 

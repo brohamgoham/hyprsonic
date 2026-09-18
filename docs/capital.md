@@ -75,4 +75,4 @@ Facts, inferred classifications, historical events, and user policy have differe
 
 ## Remaining acceptance
 
-Configure our own accounts, verify their modes and compare amounts against venue screens at matched times. If the owner's HL mode is unsupported, implement that mode before producing its capital capacity; do not change the wallet's account mode just to make a test pass. Complete settlement/receipt and authenticated commitment coverage only where the intended funding workflow requires it. See [Phase 2 evidence](phase2-report.md) and [roadmap](roadmap.md).
+Configure our own accounts, verify their modes and compare amounts against venue screens at matched times. If the owner's HL mode is unsupported, implement that mode before producing its capital capacity; do not change the wallet's account mode just to make a test pass. Complete settlement/receipt and authenticated commitment coverage only where the intended funding workflow requires it. See [Phase 2 evidence](phases/phase2-report.md) and [roadmap](roadmap.md).

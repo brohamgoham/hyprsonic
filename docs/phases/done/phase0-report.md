@@ -15,7 +15,7 @@ For a fresh checkout, first run `cargo fetch --locked` to obtain the three direc
 
 All four plans execute the same proposed action at tick 2. Both scenarios apply the same tick-5 price move. Only the payout's settlement time changes.
 
-From [the recorded wallet failure](../artifacts/wallet-failure.log):
+From [the recorded wallet failure](../../../artifacts/wallet-failure.log):
 
 ```text
 #006 t=1 [POLY_CHALLENGE_DELAY] $3000.00 pending proceeds delayed from t=3 to t=9; funding contribution before settlement = $0.00
@@ -40,14 +40,14 @@ The demo also breaks synthetic financing after the pledge. The ledger retains bo
 
 | Requirement | Evidence |
 |---|---|
-| Three synthetic venue stubs and one proposed action | [Fixture](../fixtures/lane1.json), [model](../src/model.rs) |
+| Three synthetic venue stubs and one proposed action | [Fixture](../../../fixtures/lane1.json), [model](../../../src/model.rs) |
 | Settled, withdrawable, unrealized, pending, pledged/reserved, delayed/blocked | Identified lots and distinct views in each ledger snapshot; overlapping totals explicitly documented |
-| Four plans, costs, dependencies, partial failures | [Replay engine](../src/engine.rs), [plan table](demo.md#four-funding-plans) |
-| Price move with delayed payout and feasible alternative | [Demo output](../artifacts/phase0-demo.log) |
-| Ordered event evidence with exact fixture | [JSON ledger](../artifacts/wallet-failure.json) |
-| Under-five-minute script | [Script](../scripts/demo.sh), [measured timing](../artifacts/demo-timing.json) |
-| Required tests plus accounting and failure boundaries | [16 integration tests](../tests/phase0.rs) |
-| Synthetic scope and commercial-access limitation | [README](../README.md), report fixture flags and lifecycle events |
+| Four plans, costs, dependencies, partial failures | [Replay engine](../../../src/engine.rs), [plan table](../../demo.md#four-funding-plans) |
+| Price move with delayed payout and feasible alternative | [Demo output](../../../artifacts/phase0-demo.log) |
+| Ordered event evidence with exact fixture | [JSON ledger](../../../artifacts/wallet-failure.json) |
+| Under-five-minute script | [Script](../../../scripts/demo.sh), [measured timing](../../../artifacts/demo-timing.json) |
+| Required tests plus accounting and failure boundaries | [16 integration tests](../../../tests/phase0.rs) |
+| Synthetic scope and commercial-access limitation | [README](../../../README.md), report fixture flags and lifecycle events |
 
 ## Verification
 
@@ -66,6 +66,6 @@ Every price, fee, transfer duration, lending term, margin rule, and fill is synt
 
 Survival is limited to the selected horizon. Pending claims use fixture marks; liquidation execution, loan repayment at maturity, actual counterparty arrangements, and market-calibrated risk are outside Phase 0. The ledger continues diagnostically after a breach without simulating liquidation, and the result remains failed.
 
-This delivers the agreed technical demonstration, not validation that customers will pay. **Own-wallet testing and tuning now precede any external pilot or selling**, under the [delivery plan](roadmap.md). Outreach remains gated on Mo's explicit approval. If users would not buy the planning/capital-state workflow without live credit, stop Lane 1 rather than treating technical completion as commercial proof. Cantina remains a separate lane.
+This delivers the agreed technical demonstration, not validation that customers will pay. **Own-wallet testing and tuning now precede any external pilot or selling**, under the [delivery plan](../../roadmap.md). Outreach remains gated on Mo's explicit approval. If users would not buy the planning/capital-state workflow without live credit, stop Lane 1 rather than treating technical completion as commercial proof. Cantina remains a separate lane.
 
-Published to [brohamgoham/hyprsonic](https://github.com/brohamgoham/hyprsonic/commit/e7e5586) on `master`. No PR was needed. The [product decision](product.md) and [architecture contract](architecture.md) define the real-data phases that follow; they do not change this report's synthetic scope.
+Published to [brohamgoham/hyprsonic](https://github.com/brohamgoham/hyprsonic/commit/e7e5586) on `master`. No PR was needed. The [product decision](../../product.md) and [architecture contract](../../architecture.md) define the real-data phases that follow; they do not change this report's synthetic scope.

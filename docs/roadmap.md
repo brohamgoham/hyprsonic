@@ -32,13 +32,13 @@ Phases are acceptance gates, not promises of calendar dates. Set an estimate for
 
 ## Phase 0 — preserve the proof
 
-Already shipped: synthetic three-venue portfolio, four funding alternatives, delayed settlement plus price stress, non-atomic step failures and an event ledger. Sixteen tests pass; the recorded demo runs in under five minutes. See the [completion report](phase0-report.md).
+Already shipped: synthetic three-venue portfolio, four funding alternatives, delayed settlement plus price stress, non-atomic step failures and an event ledger. Sixteen tests pass; the recorded demo runs in under five minutes. See the [completion report](phases/done/phase0-report.md).
 
 Keep this regression evidence. Do not extend its arbitrary ticks, fees, rules and loan into a production model. Later tests can use captured responses and controlled faults; those are explicitly test inputs, not an expanded product demo.
 
 ## Phase 1 — connect real accounts and establish the core boundary
 
-Current evidence: [Phase 1 implementation report](phase1-report.md). Configure the owner's addresses using [the observation guide](observations.md) to finish the own-account gate. Public-reference connectivity does not waive that requirement.
+Current evidence: [Phase 1 implementation report](phases/done/phase1-report.md). Configure the owner's addresses using [the observation guide](observations.md) to finish the own-account gate. Public-reference connectivity does not waive that requirement.
 
 **Deliverable:** a CLI observation command reads configured accounts and shows exactly what it reached. This is the first implementation phase, not a standalone generic-engine project.
 
@@ -62,7 +62,7 @@ Evidence: phase report, dependency-boundary check, sanitized adapter tests and a
 
 ## Phase 2 — reconcile capital and constraints
 
-Current implementation: [`capital` and `explain`](capital.md), with [validation and remaining gates](phase2-report.md). The standard-cross HL model is deliberately limited; the owner's actual mode has not been selected or validated. Authenticated commitments, onchain prediction redemption and destination receipts remain coverage gaps, not assumed zero balances or completed events.
+Current implementation: [`capital` and `explain`](capital.md), with [validation and remaining gates](phases/phase2-report.md). The standard-cross HL model is deliberately limited; the owner's actual mode has not been selected or validated. Authenticated commitments, onchain prediction redemption and destination receipts remain coverage gaps, not assumed zero balances or completed events.
 
 **Deliverable:** a live, scoped capital view backed by observations rather than hand-entered balances.
 

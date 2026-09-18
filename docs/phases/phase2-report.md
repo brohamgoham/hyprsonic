@@ -12,7 +12,7 @@
 - Bounded HL non-funding ledger history, inclusive pagination and event deduplication. Events never increment snapshot balances. Activity newer than the snapshot prevents capacity inference.
 - `capital --explain`, private JSON reports and offline historical `explain --report ... [--claim ...]` inspection. The CLI shows collection time separately from pure reconciliation time.
 
-Run instructions, limits, policies and primary rule references are in [the capital guide](capital.md). [Phase 2T](tui-proposal.md) proposes a Ratatui inspection workspace; no TUI is implemented in this revision.
+Run instructions, limits, policies and primary rule references are in [the capital guide](../capital.md). [Phase 2T](../tui-proposal.md) proposes a Ratatui inspection workspace; no TUI is implemented in this revision.
 
 ## Actual live run
 

@@ -1,12 +1,12 @@
 # Phase 1 — real observations and the core boundary
 
-Historical Phase 1 implementation report. For the current capital command, validation count and remaining acceptance work, see [Phase 2](phase2-report.md).
+Historical Phase 1 implementation report. For the current capital command, validation count and remaining acceptance work, see [Phase 2](../phase2-report.md).
 
 **Implementation delivered; own-account acceptance pending.** This increment adds the `observe` command, a two-crate boundary and real read-only adapters. The owner has not supplied an own-account configuration yet. Public reference reads validate connectivity and response handling, not the owner's wallets or a completed funding workflow.
 
 ## Run
 
-Follow [the setup guide](observations.md), then:
+Follow [the setup guide](../../observations.md), then:
 
 ```sh
 cargo run --locked -- observe --config .local/accounts.json
@@ -62,4 +62,4 @@ See the commit containing this report for the implementation revision. Validatio
 
  No owner wallet data or unrelated research is part of the commit.
 
-Remaining gate: configure and run the owner's actual HL account, Polymarket holding wallet and required chain reads; inspect identity, source coverage and failures. No real-account reconciliation or funding trial is claimed. The [roadmap](roadmap.md) retains this pending acceptance instead of declaring Phase 1 fully complete.
+Remaining gate: configure and run the owner's actual HL account, Polymarket holding wallet and required chain reads; inspect identity, source coverage and failures. No real-account reconciliation or funding trial is claimed. The [roadmap](../../roadmap.md) retains this pending acceptance instead of declaring Phase 1 fully complete.
